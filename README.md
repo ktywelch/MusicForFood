@@ -11,3 +11,5 @@ THEN I am presented with cuisine choices
 WHEN I Select the recipe I will get a lis of ingredients
 THEN I will presented with a list of playlists from Spotify that I can play 
 ----
+
+![FlowChart](./assets/images/flowdiagram.png)
