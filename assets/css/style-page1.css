@@ -1,0 +1,43 @@
+body {
+    text-align: center;
+    margin: 20px;
+    border-radius:5px;
+    background-color: rgb(253, 252, 252);
+    padding: 55px;
+
+
+}
+
+#navbarMenuHeroC {
+    background-color: cadetblue;
+    display: inline;
+    padding: 50px;
+    text-align: center;
+
+}
+
+#navbarMenuHeroC:hover {
+color: rgb(75, 56, 75);
+font-weight: bolder;
+font-size: large;
+}
+ 
+.button is-primary my-3:hover {
+color: mediumaquamarine;
+font-size: large;
+font-weight: bolder;
+}
+
+.button is-primary my-3 {
+    font-size: medium;
+}
+
+.hero-body {
+    background-color: rgb(220, 218, 231);
+}
+
+.title {
+    color:mediumaquamarine ;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 80px;
+}
