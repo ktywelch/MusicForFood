@@ -48,7 +48,7 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
 	let title = recipes[i]["title"];	
 	let newA=document.createElement("p")
 	newA.innerHTML = `<a href="https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed">
-	<img src=${img} style="width:100px;height:100px;" alt="${title}>"</a>${title}`;
+	<img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
 	resPg.appendChild(newA);
 	}
 	
@@ -96,14 +96,11 @@ newF.setAttribute("id","selectCulture")
 for( let i = 0; i < keys.length; i++){
 	culture = keys[i];
 	let lc = culture.toLowerCase();
-	console.log(lc);
 	let image = cultures[keys[i]]["images"][0];
 	let altimage = cultures[keys[i]]["altImage"][0];
 	let playlist = cultures[keys[i]]["playlist"][0];
 	let newD = document.createElement("row");
-	newD.setAttribute("class","colums is-one-third")
-    newD.setAttribute("id",culture)
-	newD.innerHTML = `<img  src="../images/${lc}/${image}" alt="${altimage}" style="padding:10px;width:200px;height:200px;">`;
+	newD.innerHTML = `<img  src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:200px;height:200px;">`;
 	newF.appendChild(newD);
  }	
  //add the listeners
@@ -111,14 +108,11 @@ for( let i = 0; i < keys.length; i++){
  console.log("WY1")
  let btnSelect = document.querySelector(`#selectCulture`);
   btnSelect.addEventListener('click', (event) => {
-	console.log(event.target.nodeName, event.path[1].id);
-	console.log(this);
+	console.log(event.target.id);
+	country = event.target.id;
 	event.preventDefault();
-	country = event.path[1].id;
-	console.log(country);
 	fetchPlaylist(country);
 	fetchRecipes(country);
-//	window.open ('FT2.html','_self',false);
 	let myObj = document.querySelector('#selectCulture');
 	myObj.remove();
 	});   
