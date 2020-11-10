@@ -1,0 +1,23 @@
+body {
+    text-align: center;
+    margin: 20px;
+    border-radius:5px;
+    background-color: rgb(253, 252, 252);
+    padding: 55px;
+
+
+}
+
+#navbarMenuHeroC {
+    background-color: cadetblue;
+    display: inline;
+    padding: 50px;
+    text-align: center;
+
+}
+
+#navbarMenuHeroC:hover {
+color: rgb(75, 56, 75);
+font-weight: bolder;
+font-size: large;
+}
