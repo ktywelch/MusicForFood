@@ -21,23 +21,17 @@ color: rgb(75, 56, 75);
 font-weight: bolder;
 font-size: large;
 }
- 
-.button is-primary my-3:hover {
-color: mediumaquamarine;
-font-size: large;
-font-weight: bolder;
-}
-
-.button is-primary my-3 {
-    font-size: medium;
-}
 
 .hero-body {
-    background-color: rgb(220, 218, 231);
+    display: inline-flex;
+    align-content: center;
+    margin: 50px;
+    padding: 40px;
 }
 
-.title {
-    color:mediumaquamarine ;
+.h1 {
+    font-weight: bolder;
+    color:cadetblue ;
+    font-size: 30px;
     font-family: 'Times New Roman', Times, serif;
-    font-size: 80px;
 }
