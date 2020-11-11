@@ -117,7 +117,7 @@ for( let i = 0; i < keys.length; i++){
 	let altimage = cultures[keys[i]]["altImage"][0];
 	let playlist = cultures[keys[i]]["playlist"][0];
 	let newD = document.createElement("row");
-	newD.innerHTML = `<img  src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:200px;height:200px;">`;
+	newD.innerHTML = `<img  src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
 	newF.appendChild(newD);
  }	
  //add the listeners
