@@ -1,19 +1,24 @@
 body {
     text-align: center;
-    margin: 20px;
+    /* margin: 20px; */
     border-radius:5px;
     background-color: rgb(253, 252, 252);
-    padding: 55px;
+    /* padding: 55px; */
 
 
 }
 
-#navbarMenuHeroC {
+section {
     background-color: cadetblue;
+}
+
+
+
+#navbarMenuHeroC {
+    background-color: cadetblue; 
     display: inline;
     padding: 50px;
     text-align: center;
-
 }
 
 #navbarMenuHeroC:hover {
