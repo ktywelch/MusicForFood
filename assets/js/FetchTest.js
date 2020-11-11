@@ -10,8 +10,12 @@ const cultures = {
 		playlist: [808923603,7723841822,5397210322,2484275588,6124514764]
 	},
 	Mexican:  {
-		images: ["jimmy-baum-NjdpeYDHNrQ-unsplash.jpg"], 
-		altImage: ["Mayan Temple taken by Jimmy Baum"],
+		images: ["jimmy-baum-NjdpeYDHNrQ-unsplash.jpg","2-mexican-fiesta-sushobha-jenner-canvas-print.jpg",
+		 "38-15-12-5-17-49-3m.jpg","4d8cc8f0e7eaa9ee0de0837645cce7ec.jpg","62527921-cartoon-cute-doodles.jpg",
+		"flag-800.png","images.jpeg"], 
+		altImage: ["Mayan Temple taken by Jimmy Baum","Mexican Fiesta on Canvas Print","Painting man in sombrero sleeping in desert",
+		"taco burrito chips and salsa print","cartoon doodles hand drawn mexican food illustration from Doodles Vector Art",
+	    "Mexican Flag","Mexican food images"],
 		playlist: [5212851564,4923634428,3712532246,4522361286,7987112122]
 	},
 	Chinese:  {
