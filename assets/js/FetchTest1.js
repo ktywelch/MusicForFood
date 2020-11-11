@@ -50,7 +50,7 @@ const cultures = {
 // //Fetch 10 italian cuise Recipes
 function fetchRecipes (cuisine){
  //let cuisine="Italian";
- let num=10;
+ let num=5;
  let resPg = document.querySelector('#culture-cards')
 fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=862113360871404295a6f02d2778f8ed`, {
  })
@@ -71,7 +71,7 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
 	let img = recipes[i]["image"];
 	let title = recipes[i]["title"];
 	let url = 	`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`
-	let newA=document.createElement("row")
+	let newA=document.createElement("td")
 	newA.innerHTML = `<a href="${url}"><img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
 	resPg.appendChild(newA);
 	let recp = `{id: ${id},title: ${title},image: ${img},recipeUrl: ${url}}`;
@@ -135,7 +135,13 @@ const keys = Object.keys(cultures)
 let culture ="";
 let newF = document.createElement("form");
 newF.setAttribute("id","selectCulture")
+let newT=document.createElement("table");
+let newTb=document.createElement("tbody");
 for( let i = 0; i < keys.length; i++){
+	if( i % 3 === 0){
+		console.log("checking if can be divided by 3",i);
+		var newR = document.createElement("tr");
+	}
 	culture = keys[i];
 	let lc = culture.toLowerCase();
 	let l1 = cultures[keys[i]]["images"].length;
@@ -144,15 +150,34 @@ for( let i = 0; i < keys.length; i++){
 	let altimage = cultures[keys[i]]["altImage"][imgNo];
 	let plNo = getRandomInt(cultures[keys[i]]["playlist"].length);
 	let playlist = cultures[keys[i]]["playlist"][plNo];
-	let newD = document.createElement("row");
-<<<<<<< HEAD
-	newD.innerHTML = `<div><div class="cont"><img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" 
-	style="padding:10px;width:200px;height:200px;display:inline;"> <div class="middle"><div class="text">${culture}</div></div>`;
-=======
-	newD.innerHTML = `<img  src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
->>>>>>> 01e80260a7057a7d991cf7e7f51ec13f532d52d2
-	newF.appendChild(newD);
+	let newD = document.createElement("td");
+	newD.innerHTML = `<div class="container">
+	<div class="overlay-image image"><img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" 
+	style="padding:10px;"> <div class="hover"><img class="image"></img>  <div class="text">${culture}</div></div></div>`;
+	
+	
+	/*
+	<div class=" overlay-image"><a href="../">
+	<img class=" image _b2 " src="./adrien-tutin-hCh_PHIhoLI-unsplash.jpg" alt="Alt text" />
+	<div class=" normal "> 
+	</div>
+	<div class="hover _b3 ">
+	 <img class="image _b2 " />
+	 <div class="text">HOVER</div>
+   </a></div>
+	*/
+	
+	
+	
+	
+	newR.appendChild(newD);
+	if( i % 3 === 0){
+		newTb.appendChild(newR);
+	}
  }	
+ newTb.appendChild(newR);
+newT.appendChild(newTb)
+newF.appendChild(newT)
  //add the listeners
  abc.appendChild(newF);
  let btnSelect = document.querySelector(`#selectCulture`);
