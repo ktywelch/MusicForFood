@@ -39,8 +39,14 @@ font-weight: bolder;
 }
 
 .title {
-    color:mediumaquamarine ;
+    color:black ;
     font-family: 'Times New Roman', Times, serif;
     font-size: 80px;
     margin-top: -20%;
+    font-family: 'Pacifico', cursive;
+}
+
+h2 {
+    font-size: 50px;
+    font-weight: 800;
 }
