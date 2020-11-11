@@ -2,27 +2,36 @@ const cultures = {
 	French: {
 		images: ["anthony-delanoix-Q0-fOL2nqZc-unsplash.jpg"], 
 		altImage: ["Eiffel Tower Picture taken by Anthony Delanoix"],
-		playlist: [7881922322, 5574391562]
+		playlist: [3748969686,6553706304,1737848082,7881922322,5574391562]
 	},
 	Indian: {
 		images: ["annie-spratt-w3CyGs-keEM-unsplash.jpg"], 
 		altImage: ["Indian Building taken by Annie Spratt"],
-		playlist: [2484275588, 5397210322]
+		playlist: [808923603,7723841822,5397210322,2484275588,6124514764]
 	},
 	Mexican:  {
-		images: ["jimmy-baum-NjdpeYDHNrQ-unsplash.jpg"], 
-		altImage: ["Mayan Temple taken by Jimmy Baum"],
-		playlist: [5212851564, 4522361286]
+		images: ["jimmy-baum-NjdpeYDHNrQ-unsplash.jpg","2-mexican-fiesta-sushobha-jenner-canvas-print.jpg",
+		 "38-15-12-5-17-49-3m.jpg","4d8cc8f0e7eaa9ee0de0837645cce7ec.jpg","62527921-cartoon-cute-doodles.jpg",
+		"flag-800.png","images.jpeg"], 
+		altImage: ["Mayan Temple taken by Jimmy Baum","Mexican Fiesta on Canvas Print","Painting man in sombrero sleeping in desert",
+		"taco burrito chips and salsa print","cartoon doodles hand drawn mexican food illustration from Doodles Vector Art",
+	    "Mexican Flag","Mexican food images"],
+		playlist: [5212851564,4923634428,3712532246,4522361286,7987112122]
 	},
 	Chinese:  {
-		images: ["alexander-schimmeck-gUtcrNunbCM-unsplash.jpg"], 
-		altImage: ["Terracotta Army taken by Alexander Schimmeck"],
-		playlist: [6224909624, 969940552]
+		images: ["alexander-schimmeck-gUtcrNunbCM-unsplash.jpg","cat-crawford-FRSSDv3mAy8-unsplash.jpg",
+				"markus-winkler-_B-ahpq0S7c-unsplash.jpc","sam-beasley-eltps1t7gDY-unsplash.jpg",
+				 "shane-young-hOwGHmNcncg-unsplash.jpg","victor-he-0xn9T2cEigE-unsplash.jpg",
+				"yiranding-aIG78YGhDmM-unsplash.jpg"], 
+		altImage: ["Terracotta Army taken by Alexander Schimmeck","The Great Wall of China by Cat Crawford",
+				"Chinese Latern by Makus Winkler","Traditioan Fishing by Sam Beasley","Reflected Mountain by Shane Young",
+			    "Chinese Temple by Victor He","Oriental Pearl Tower by Yiranding"],
+		playlist: [4962135028,6224909624,969940552,6431991064,6885856824,6324317944]
 	},
 	Italian:  {
 		images: ["italian images.jpg"], 
 		altImage: ["Image of pizza wirh italian flag"],
-		playlist: [4779177244, 6514155104]
+		playlist: [4779177244,8146526982,5353448802,6514155104,272400133]
 	}
 }
 
@@ -37,21 +46,26 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
    return resp.json();
 })
 .then(response => {
-	console.log("this is the first: ",response);
+	//clear the recipe storage before we start
+	if(localStorage.getItem("recipes")){
+		localStorage.removeItem("recipes")
+	}
+	let dataRespone = [], recp = {};
 	let newR = document.createElement("row");
 	let recipes = response["results"];
 	console.log(recipes);
 	for (let i=0;i < recipes.length; i++) {
 	let id = recipes[i]["id"];
 	let img = recipes[i]["image"];
-	console.log(img);
-	let title = recipes[i]["title"];	
+	let title = recipes[i]["title"];
+	let url = 	`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`
 	let newA=document.createElement("p")
-	newA.innerHTML = `<a href="https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed">
-	<img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
+	newA.innerHTML = `<a href="${url}"><img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
 	resPg.appendChild(newA);
+	let recp = `{id: ${id},title: ${title},image: ${img},recipeUrl: ${url}}`;
+	dataRespone.push(recp);
 	}
-	
+	localStorage.setItem("recipes",JSON.stringify(dataRespone));
 })
 .catch(err => {
 	console.error(err);
@@ -60,8 +74,11 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
 
 function fetchPlaylist(){
 //Use RapidAPI to get playlists from Deezer
-//let pl="794838881"
 console.log(cultures, country);
+if(localStorage.getItem("playlists")){
+	localStorage.removeItem("playlists")
+}
+
 
 let pl = cultures[`${country}`]["playlist"][0];
 
