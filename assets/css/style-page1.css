@@ -1,0 +1,52 @@
+body {
+    text-align: center;
+    border-radius:5px;
+    background-color: rgb(253, 252, 252);
+}
+
+section {
+    background-color: cadetblue;
+}
+
+
+
+#navbarMenuHeroC {
+    background-color: cadetblue; 
+    display: inline;
+    padding: 50px;
+    text-align: center;
+}
+
+#navbarMenuHeroC:hover {
+color: rgb(75, 56, 75);
+font-weight: bolder;
+font-size: large;
+}
+ 
+.button:hover {
+color: mediumaquamarine;
+font-size: large;
+font-weight: bolder;
+}
+
+.button {
+    font-size: medium;
+    margin: 3%;
+}
+
+.hero-body {
+    background-color: rgb(220, 218, 231);
+}
+
+.title {
+    color:black ;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 80px;
+    margin-top: -20%;
+    font-family: 'Pacifico', cursive;
+}
+
+h2 {
+    font-size: 50px;
+    font-weight: 800;
+}
