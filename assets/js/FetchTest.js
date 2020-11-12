@@ -48,10 +48,10 @@ const cultures = {
 }
 
 //Fetch 5 Recipes
-function fetchRecipes (cuisine){
+async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
  let num=5,id="",img="",title="",description="",url="",recipes=[];
- let dataRespone = [], recp = {};
+ let dataResponse = [], recp = {},fetches =[];
  let resPg = document.querySelector('#culture-cards')
  	//clear the recipe storage before we start
 	 if(localStorage.getItem("recipes")){
@@ -59,83 +59,83 @@ function fetchRecipes (cuisine){
 	}
 	
 //------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
-fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=99493ec7b2934e05a34e73942f62b56a`, {
+await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=579753ff1b574d34b8ee1dcf5a821aa9
+`, {
  })
    .then(function(resp) {
    return resp.json();
 })
-.then(response => {
+.then( async response => {
 	// let newR = document.createElement("row");
 	recipes = response["results"];
-	//console.log(recipes);
 	for (let i=0;i < recipes.length; i++) {
 	id = recipes[i]["id"];
 	img = recipes[i]["image"];
 	title = recipes[i]["title"];
-	ret =	fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=99493ec7b2934e05a34e73942f62b56a`, {
+    await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=579753ff1b574d34b8ee1dcf5a821aa9`, {
 	        	})
-	  	      .then(function(resp) {
-	  	      return resp.json();
+	  	    .then(function(mresp) {
+	  	      return mresp.json();
    		      })
-   		      .then(response1 => {
-			   description = response1["summary"];
-			   url = response1["spoonacularSourceUrl"];
-			   return (description,url);
-	         })
-	console.log(description,url," and ",ret);
-	let recp = `{"id": "${id}","title": "${title}","image": "${img}","description": "${description}","recipeUrl": "${url}"}`;
-	dataRespone.push(recp);
+   		      .then(response1 => {	
+			   description = encodeURI(response1["summary"]);
+			   url = encodeURI(response1["spoonacularSourceUrl"]);
+			   recp = `{"id": "${id}","title": "${title}","image": "${img}","description": "${description}","recipeUrl": "${url}"}`;			   
+			   dataResponse.push(recp)			 		   
+			 })
 	}
-	localStorage.setItem("recipes",JSON.stringify(dataRespone));
+	localStorage.setItem("recipes",JSON.stringify(dataResponse));
+
 	 })
 .catch(err => {
 console.error(err);
  });
+
 }
 
 
 function fetchPlaylist(country){
-//Use RapidAPI to get playlists from Deezer need to wait for last function to finish so we have somehwer to put it so here is good
-// Going to save all the data into LocalStorage so we can use that to generate the page
-var id="",imgLink
-  if(localStorage.getItem("playlist")){
-	localStorage.removeItem("playlist")
-  }
-  // Pulling the playlists from our difined selction
-  let listOfPl = cultures[`${country}`]["playlist"];
-  // creating an empty array so I can put the music Details there
-  let dataPlaylist = [];
+// //Use RapidAPI to get playlists from Deezer need to wait for last function to finish so we have somehwer to put it so here is good
+// // Going to save all the data into LocalStorage so we can use that to generate the page
+// var id="",imgLink
+//   if(localStorage.getItem("playlist")){
+// 	localStorage.removeItem("playlist")
+//   }
+//   // Pulling the playlists from our difined selction
+//   let listOfPl = cultures[`${country}`]["playlist"];
+//   // creating an empty array so I can put the music Details there
+//   let dataPlaylist = [];
 
-  //fetch the playlists for the country
-   for (let i=0;i < listOfPl.length; i++) {
-	let pl=listOfPl[i]; 
-	let url=`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`;
-	console.log(url);
-    fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
-		"method": "GET",
-		"headers": {
-			"x-rapidapi-key": "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b",
-			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
-		}
-	})
-	.then(function(resp) {
-	  return resp.json();
-	  })
-	  //Parsing the response so that we can store the individual values
-		.then(response => {
-			let id = response["id"]
-			let url = response["link"]
-		    let imgLink = response["picture_small"]
-			let title = response["title"]
-            let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
-			dataPlaylist.push(plDet);
-	        console.log(plDet); 
-	})
-	.catch(err => {
-	console.error(err);
-	});
-	localStorage.setItem("playlist",dataPlaylist);
-   }
+//   //fetch the playlists for the country
+//    for (let i=0;i < listOfPl.length; i++) {
+// 	let pl=listOfPl[i]; 
+// 	let url=`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`;
+// 	console.log(url);
+//     fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
+// 		"method": "GET",
+// 		"headers": {
+// 			"x-rapidapi-key": "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b",
+// 			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+// 		}
+// 	})
+// 	.then(function(resp) {
+// 	  return resp.json();
+// 	  })
+// 	  //Parsing the response so that we can store the individual values
+// 		.then(response => {
+// 			let id = response["id"]
+// 			let url = response["link"]
+// 		    let imgLink = response["picture_small"]
+// 			let title = response["title"]
+//             let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
+// 			dataPlaylist.push(plDet);
+// 	        console.log(plDet); 
+// 	})
+// 	.catch(err => {
+// 	console.error(err);
+// 	});
+// 	localStorage.setItem("playlist",dataPlaylist);
+//    }
 }
 
 // This will draw the screen with the 5 recipes with descriptions 
@@ -166,14 +166,14 @@ async function createDetailRecipeButtons(){
 		for(let i=0;i < myRecipes.length;i++){
 			//because we store it as an object we need to do a second JSON.parse
 			let myRecipes1 = JSON.parse(myRecipes[i])
-			let desc = myRecipes1.description;
+			let desc = decodeURI(myRecipes1.description);	
 			let image = myRecipes1.image;
 			newR = document.createElement("tr");
 			if(i % 2 === 0){
 			newR.innerHTML=`<td>${desc}</td><td><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
-			newR.innerHTML=`<td><img src=${image}</td><td><${desc}></td>`
+			newR.innerHTML=`<td><img src=${image}></td><td>${desc}</td>`
 			newT.appendChild(newR)	
 			}
 			
