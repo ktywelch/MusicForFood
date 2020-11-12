@@ -47,58 +47,70 @@ const cultures = {
 	}
 }
 
-// //Fetch 10 italian cuise Recipes
+//Fetch 5 Recipes
 function fetchRecipes (cuisine){
- //let cuisine="Italian";
- let num=5;
+ //setting up variables that we may need within and between the function
+ let num=5,id="",img="",title="",description="",url="",recipes=[];
+ let dataRespone = [], recp = {};
  let resPg = document.querySelector('#culture-cards')
+ 	//clear the recipe storage before we start
+	 if(localStorage.getItem("recipes")){
+		localStorage.removeItem("recipes")
+	}
+	
+//------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
 fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=862113360871404295a6f02d2778f8ed`, {
  })
    .then(function(resp) {
    return resp.json();
 })
 .then(response => {
-	//clear the recipe storage before we start
-	if(localStorage.getItem("recipes")){
-		localStorage.removeItem("recipes")
-	}
-	let dataRespone = [], recp = {};
-	let newR = document.createElement("row");
-	let recipes = response["results"];
-	console.log(recipes);
+	// let newR = document.createElement("row");
+	recipes = response["results"];
+	//console.log(recipes);
 	for (let i=0;i < recipes.length; i++) {
-	let id = recipes[i]["id"];
-	let img = recipes[i]["image"];
-	let title = recipes[i]["title"];
-	let url = 	`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`
-	let newA=document.createElement("tr")
-	newA.innerHTML = `<a href="${url}"><img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
-	resPg.appendChild(newA);
-	let recp = `{id: ${id},title: ${title},image: ${img},recipeUrl: ${url}}`;
+	id = recipes[i]["id"];
+	img = recipes[i]["image"];
+	title = recipes[i]["title"];
+	ret =	fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`, {
+	        	})
+	  	      .then(function(resp) {
+	  	      return resp.json();
+   		      })
+   		      .then(response1 => {
+			   description = response1["summary"];
+			   url = response1["spoonacularSourceUrl"];
+			   return (description,url);
+	         })
+	// let url = 	`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`
+	// let newA=document.createElement("tr")
+	// newA.innerHTML = `<a href="${url}"><img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
+	// resPg.appendChild(newA);
+	console.log(description,url," and ",ret);
+	let recp = `{id: ${id},title: ${title},image: ${img},description: ${description},recipeUrl: ${url}}`;
 	dataRespone.push(recp);
 	}
 	localStorage.setItem("recipes",JSON.stringify(dataRespone));
-	newD = document.createElement("div");
-	newD.setAttribute("id","PlayLists");
-  })
-
+	 })
 .catch(err => {
 console.error(err);
  });
 }
-function fetchPlaylist(country){
 
+
+function fetchPlaylist(country){
 //Use RapidAPI to get playlists from Deezer need to wait for last function to finish so we have somehwer to put it so here is good
 // Going to save all the data into LocalStorage so we can use that to generate the page
-  if(localStorage.getItem("playlists")){
-	localStorage.removeItem("playlists")
+var id="",imgLink
+  if(localStorage.getItem("playlist")){
+	localStorage.removeItem("playlist")
   }
+  // Pulling the playlists from our difined selction
   let listOfPl = cultures[`${country}`]["playlist"];
-  console.log(listOfPl);
+  // creating an empty array so I can put the music Details there
   let dataPlaylist = [];
-  localStorage.setItem("playlist",dataPlaylist)
 
-  //fetch the playlists for the qusine
+  //fetch the playlists for the country
    for (let i=0;i < listOfPl.length; i++) {
 	let pl=listOfPl[i]; 
 	let url=`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`;
@@ -110,26 +122,75 @@ function fetchPlaylist(country){
 			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
 		}
 	})
-	.then(function(mresp) {
-	  return mresp.json();
+	.then(function(resp) {
+	  return resp.json();
 	  })
+	  //Parsing the response so that we can store the individual values
 		.then(response => {
 			let id = response["id"]
 			let url = response["link"]
-			let imgLink = response["picture_small"]
+		    let imgLink = response["picture_small"]
 			let title = response["title"]
-            let plDet= `{id: ${id},title: ${title},image: ${imgLink},recipeUrl: ${url}}`;
+            let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
 			dataPlaylist.push(plDet);
-			localStorage.setItem("playlist",dataPlaylist)
 	        console.log(plDet); 
 	})
 	.catch(err => {
 	console.error(err);
 	});
-
-console.log(dataPlaylist,typeof(dataPlaylist));
+	localStorage.setItem("playlist",dataPlaylist);
    }
 }
+
+// This will draw the screen with the 5 recipes with descriptions 
+async function createDetailRecipeButtons(){
+	let resPg = document.querySelector('#culture-cards');
+	var myRecipes = [], myPlaylists = [];
+	//going to check if my playlist and recipe list is there waits up to 40 second
+	for ( let i = 0; i < 40; i++){	
+
+		if(localStorage.getItem("recipes")){
+			myRecipes = JSON.parse(localStorage.getItem("recipes"));
+			//myPlaylists = JSON.parse(localStorage.getItem("playlist"));
+			i = 41;
+		} else {
+			await new Promise(resolve => setTimeout(resolve, 1000));
+
+		}
+	}
+
+    if( myRecipes.length === 0 ){
+		//create an error on the screen and the user know there is a problem with the fetch 
+		newP = document.createElement("p");
+		newP.innerHTML="<p>The Fetch Failed Please Check Your Network</p>";
+		resPg.appendChild(newP);
+		return;
+	} else {
+		newT = document.createElement("table");
+		localStorage.getItem("recipes")
+		//newT.setAttribute("class","table is-fullwidth");
+		
+		for(let i=0;i < myRecipes.length;i++){
+			console.log("aray",myRecipes[i])
+			console.log("what is ",typeof(myRecipes[i]))
+			let desc = myRecipes[i].description;
+			let image = myRecipes[i].image;
+			newR = document.createElement("tr");
+			if(i % 2 === 0){
+				console.log("here",image)
+			 newR.innerHTML=`<td>${desc}</td><td><img src=${image}></td>`
+
+			newT.appendChild(newR)
+			} else {
+			newR.innerHTML=`<td><img src=${image}</td><td><${desc}></td>`
+			newT.appendChild(newR)	
+			}
+			
+		}
+		resPg.appendChild(newT);
+	}
+
+	}
 
 
 
@@ -151,8 +212,8 @@ for( let i = 0; i < keys.length; i++){
 	let plNo = getRandomInt(cultures[keys[i]]["playlist"].length);
 	let playlist = cultures[keys[i]]["playlist"][plNo];
 	let newD = document.createElement("row");
-	newD.innerHTML = `<div><div class="cont"><img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" 
-	style="padding:10px;width:200px;height:200px;display:inline;"> <div class="middle"><div class="text">${culture}</div></div>`;
+	// newD.innerHTML = `<div><div class="cont"><img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" 
+	// style="padding:10px;width:200px;height:200px;display:inline;"> <div class="middle"><div class="text">${culture}</div></div>`;
 	newD.innerHTML = `<img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
 	newF.appendChild(newD);
  }	
@@ -165,8 +226,7 @@ for( let i = 0; i < keys.length; i++){
 	event.preventDefault();
 	fetchRecipes(country);
 	fetchPlaylist(country);
-	
-	console.log(testVar);
+	createDetailRecipeButtons();
 	let myObj = document.querySelector('#selectCulture');
 	myObj.remove();
 	});   
@@ -178,6 +238,16 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
 
+// function sleep(){
+//   setTimeout(() => {console.log("sleeping")}, 1000)
+// }
+
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+} 
 
 createButtons(cultures);
 
