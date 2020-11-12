@@ -94,48 +94,47 @@ console.error(err);
 }
 
 
-function fetchPlaylist(country){
-// //Use RapidAPI to get playlists from Deezer need to wait for last function to finish so we have somehwer to put it so here is good
-// // Going to save all the data into LocalStorage so we can use that to generate the page
-// var id="",imgLink
-//   if(localStorage.getItem("playlist")){
-// 	localStorage.removeItem("playlist")
-//   }
-//   // Pulling the playlists from our difined selction
-//   let listOfPl = cultures[`${country}`]["playlist"];
-//   // creating an empty array so I can put the music Details there
-//   let dataPlaylist = [];
+async function fetchPlaylist(country){
+//Use RapidAPI to get playlists from Deezer need to wait for last function to finish 
+// Going to save all the data into LocalStorage so we can use that to generate the page
+var id="",imgLink
+  if(localStorage.getItem("playlist")){
+	localStorage.removeItem("playlist")
+  }
+  // Pulling the playlists from our difined selction
+  let listOfPl = cultures[country].playlist;
+  // creating an empty array so I can put the music Details there
+  let dataPlaylist = [];
 
-//   //fetch the playlists for the country
-//    for (let i=0;i < listOfPl.length; i++) {
-// 	let pl=listOfPl[i]; 
-// 	let url=`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`;
-// 	console.log(url);
-//     fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
-// 		"method": "GET",
-// 		"headers": {
-// 			"x-rapidapi-key": "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b",
-// 			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
-// 		}
-// 	})
-// 	.then(function(resp) {
-// 	  return resp.json();
-// 	  })
-// 	  //Parsing the response so that we can store the individual values
-// 		.then(response => {
-// 			let id = response["id"]
-// 			let url = response["link"]
-// 		    let imgLink = response["picture_small"]
-// 			let title = response["title"]
-//             let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
-// 			dataPlaylist.push(plDet);
-// 	        console.log(plDet); 
-// 	})
-// 	.catch(err => {
-// 	console.error(err);
-// 	});
-// 	localStorage.setItem("playlist",dataPlaylist);
-//    }
+  //fetch the playlists for the country
+   for (let i=0;i < listOfPl.length; i++) {
+	let pl=listOfPl[i]; 
+	
+    await fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
+		"method": "GET",
+		"headers": {
+			"x-rapidapi-key": "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b",
+			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+		}
+	})
+	.then(function(resp) {
+	  return resp.json();
+	  })
+	  //Parsing the response so that we can store the individual values
+		.then(response => {
+			let id = response["id"]
+			let url = response["link"]
+		    let imgLink = response["picture_small"]
+			let title = response["title"]
+            let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
+			dataPlaylist.push(plDet);
+	        console.log(plDet); 
+    	})
+	.catch(err => {
+	console.error(err);
+	});
+	localStorage.setItem("playlist",dataPlaylist);
+   }
 }
 
 // This will draw the screen with the 5 recipes with descriptions 
@@ -143,6 +142,7 @@ async function createDetailRecipeButtons(){
 	let resPg = document.querySelector('#culture-cards');
 	var myRecipes = [], myPlaylists = [];
 	//going to check if my playlist and recipe list is there waits up to 40 second
+	// do not think we need this anymore because we moved everything to await but will leave in case other issues
 	for ( let i = 0; i < 40; i++){	
 		if(localStorage.getItem("recipes")){
 			myRecipes = JSON.parse(localStorage.getItem("recipes"));
@@ -163,26 +163,53 @@ async function createDetailRecipeButtons(){
 		newT = document.createElement("table");
 		localStorage.getItem("recipes")
 		newT.setAttribute("class","table is-fullwidth");
+		newT.setAttribute("id","selectRecipe");
 		for(let i=0;i < myRecipes.length;i++){
 			//because we store it as an object we need to do a second JSON.parse
 			let myRecipes1 = JSON.parse(myRecipes[i])
-			let desc = decodeURI(myRecipes1.description);	
+			// we needed to encode the link and the description or we had a JSON parse error so decoding it
+			// @Geoff - the desc is too big so chaning this to the title - we can use the desc when we click the link
+			//let desc = decodeURI(myRecipes1.description);	
+			let title = myRecipes1.title;
+			let recpId = myRecipes1.id;
+			//let title = decodeURI(myRecipes1.title);
 			let image = myRecipes1.image;
 			newR = document.createElement("tr");
+			newR.setAttribute("id",recpId)
 			if(i % 2 === 0){
-			newR.innerHTML=`<td>${desc}</td><td><img src=${image}></td>`
+			newR.innerHTML=`<td>${title}</td><td><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
-			newR.innerHTML=`<td><img src=${image}></td><td>${desc}</td>`
+			newR.innerHTML=`<td><img src=${image}></td><td>${title}</td>`
 			newT.appendChild(newR)	
 			}
 			
 		}
 		resPg.appendChild(newT);
+		 //add the listener for the recipe (on row for now)
+		 let btnSelect = document.querySelector(`#selectRecipe`);
+          btnSelect.addEventListener('click', (event) => {
+	      console.log(event.target.id);
+	      let recp = event.target.id;
+	      event.preventDefault();
+		  finalPage(recp);
+		  //cleaning up the page after button is clicked
+	      let myObj = document.querySelector('#selectRecipe');
+	      myObj.remove();
+	});  
 	}
 
 	}
 
+function finalPage(recipe){
+	let resPg = document.querySelector('#culture-cards');
+	newP = document.createElement("p");
+	newP.textContent = ("This will have to be developed ... tomorrow! \
+						 Fixed the playlist so if you want to go ahead I get the recipe info and the playlist all the fetches are done! \
+						 just remember to use decodeURI on description & recipeUrl - from the recipe objects")
+
+	resPg.appendChild(newP)	
+}	
 
 
 //setup array of cultures
@@ -194,16 +221,16 @@ let culture ="";
 let newF = document.createElement("form");
 newF.setAttribute("id","selectCulture")
 for( let i = 0; i < keys.length; i++){
-	culture = keys[i];
-	let lc = culture.toLowerCase();
-	let l1 = cultures[keys[i]]["images"].length;
+	let ck = keys[i];
+	let lc = ck.toLowerCase();
+	let l1 = cultures[ck]["images"].length;
 	let imgNo = getRandomInt(l1)
-	let image = cultures[keys[i]]["images"][imgNo];
-	let altimage = cultures[keys[i]]["altImage"][imgNo];
-	let plNo = getRandomInt(cultures[keys[i]]["playlist"].length);
-	let playlist = cultures[keys[i]]["playlist"][plNo];
+	let image = cultures[ck]["images"][imgNo];
+	let altimage = cultures[ck]["altImage"][imgNo];
+	let plNo = getRandomInt(cultures[ck]["playlist"].length);
+	let playlist = cultures[ck]["playlist"][plNo];
 	let newD = document.createElement("row");
-	newD.innerHTML = `<img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
+	newD.innerHTML = `<img src="../images/${lc}/${image}" id=${ck} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
 	newF.appendChild(newD);
  }	
  //add the listeners
@@ -212,10 +239,12 @@ for( let i = 0; i < keys.length; i++){
   btnSelect.addEventListener('click', (event) => {
 	console.log(event.target.id);
 	country = event.target.id;
+	console.log("Country ",country)
 	event.preventDefault();
 	fetchRecipes(country);
 	fetchPlaylist(country);
 	createDetailRecipeButtons();
+	//cleaning up the page after button is clicked
 	let myObj = document.querySelector('#selectCulture');
 	myObj.remove();
 	});   
@@ -227,16 +256,6 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
 
-// function sleep(){
-//   setTimeout(() => {console.log("sleeping")}, 1000)
-// }
-
-
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-} 
 
 createButtons(cultures);
 
