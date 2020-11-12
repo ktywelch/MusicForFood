@@ -1,19 +1,20 @@
 body {
     text-align: center;
-    margin: 20px;
     border-radius:5px;
     background-color: rgb(253, 252, 252);
-    padding: 55px;
-
-
 }
 
-#navbarMenuHeroC {
+section {
     background-color: cadetblue;
+}
+
+
+
+#navbarMenuHeroC {
+    background-color: cadetblue; 
     display: inline;
     padding: 50px;
     text-align: center;
-
 }
 
 #navbarMenuHeroC:hover {
@@ -22,14 +23,15 @@ font-weight: bolder;
 font-size: large;
 }
  
-.button is-primary my-3:hover {
+.button:hover {
 color: mediumaquamarine;
 font-size: large;
 font-weight: bolder;
 }
 
-.button is-primary my-3 {
+.button {
     font-size: medium;
+    margin: 3%;
 }
 
 .hero-body {
@@ -37,7 +39,13 @@ font-weight: bolder;
 }
 
 .title {
-    color:mediumaquamarine ;
-    font-family: 'Times New Roman', Times, serif;
+    color:black ;
     font-size: 80px;
+    margin-top: -20%;
+    font-family: 'Pacifico', cursive;
+}
+
+h2 {
+    font-size: 50px;
+    font-weight: 800;
 }

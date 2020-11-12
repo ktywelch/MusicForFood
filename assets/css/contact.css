@@ -1,33 +1,25 @@
 body {
     text-align: center;
-    margin: 20px;
     border-radius:5px;
     background-color: rgb(253, 252, 252);
-    padding: 55px;
-
-
 }
 
-#navbarMenuHeroC {
+section {
     background-color: cadetblue;
-    display: inline;
-    padding: 50px;
-    text-align: center;
-
 }
 
-#navbarMenuHeroC:hover {
-color: rgb(75, 56, 75);
-font-weight: bolder;
-font-size: large;
+h1 {
+    font-weight: bolder;
+    font-family: 'Pacifico', cursive;
+    margin-top: -20%;
+    color: black ;
+    font-size: 50px;
 }
 
 .hero-body {
-    display: inline-flex;
-    align-content: center;
-    margin: 50px;
-    padding: 40px;
+    background-color: rgb(220, 218, 231);
 }
+<<<<<<< HEAD
 
 .h1 {
     font-weight: bolder;
@@ -55,3 +47,5 @@ border: burlywood solid 1px;
     width: fit-content;
     color: crimson;
 }
+=======
+>>>>>>> 1134904a42623c8f6bbf18459cb543924b9da065
