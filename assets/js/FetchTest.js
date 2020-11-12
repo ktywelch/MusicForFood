@@ -50,7 +50,7 @@ const cultures = {
 // //Fetch 10 italian cuise Recipes
 function fetchRecipes (cuisine){
  //let cuisine="Italian";
- let num=10;
+ let num=5;
  let resPg = document.querySelector('#culture-cards')
 fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=862113360871404295a6f02d2778f8ed`, {
  })
@@ -71,45 +71,49 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
 	let img = recipes[i]["image"];
 	let title = recipes[i]["title"];
 	let url = 	`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`
-	let newA=document.createElement("row")
+	let newA=document.createElement("tr")
 	newA.innerHTML = `<a href="${url}"><img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
 	resPg.appendChild(newA);
 	let recp = `{id: ${id},title: ${title},image: ${img},recipeUrl: ${url}}`;
 	dataRespone.push(recp);
 	}
 	localStorage.setItem("recipes",JSON.stringify(dataRespone));
-	testVar=img;
-})
+	newD = document.createElement("div");
+	newD.setAttribute("id","PlayLists");
+  })
+
 .catch(err => {
-	console.error(err);
-});
+console.error(err);
+ });
 }
+function fetchPlaylist(country){
 
-function fetchPlaylist(){
-//Use RapidAPI to get playlists from Deezer
-console.log(cultures, country);
-if(localStorage.getItem("playlists")){
+//Use RapidAPI to get playlists from Deezer need to wait for last function to finish so we have somehwer to put it so here is good
+// Going to save all the data into LocalStorage so we can use that to generate the page
+  if(localStorage.getItem("playlists")){
 	localStorage.removeItem("playlists")
-}
+  }
+  let listOfPl = cultures[`${country}`]["playlist"];
+  console.log(listOfPl);
+  let dataPlaylist = [];
+  localStorage.setItem("playlist",dataPlaylist)
 
-let listOfPl = cultures[`${country}`]["playlist"];
-let dataPlaylist = [];
-localStorage.setItem("playlist",dataPlaylist)
-
-for (let i=0;i < listOfPl.length; i++) {
-let pl=listOfPl[i]; 
-	fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
+  //fetch the playlists for the qusine
+   for (let i=0;i < listOfPl.length; i++) {
+	let pl=listOfPl[i]; 
+	let url=`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`;
+	console.log(url);
+    fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
 		"method": "GET",
 		"headers": {
-			"x-rapidapi-key": "d9fe07b658msh64dfa59e41a536cp11dc80jsnf2dd2327a120",
+			"x-rapidapi-key": "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b",
 			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
 		}
 	})
-	.then(function(resp) {
-	return resp.json();
-	})
+	.then(function(mresp) {
+	  return mresp.json();
+	  })
 		.then(response => {
-			dataPlaylist = JSON.parse(localStorage.getItem("playlist"))
 			let id = response["id"]
 			let url = response["link"]
 			let imgLink = response["picture_small"]
@@ -117,15 +121,17 @@ let pl=listOfPl[i];
             let plDet= `{id: ${id},title: ${title},image: ${imgLink},recipeUrl: ${url}}`;
 			dataPlaylist.push(plDet);
 			localStorage.setItem("playlist",dataPlaylist)
-	        console.log("pl",response); 
+	        console.log(plDet); 
 	})
 	.catch(err => {
 	console.error(err);
 	});
-}
-console.log(dataPlaylist,typeof(dataPlaylist));
 
+console.log(dataPlaylist,typeof(dataPlaylist));
+   }
 }
+
+
 
 //setup array of cultures
 function createButtons(cultures){
@@ -145,12 +151,9 @@ for( let i = 0; i < keys.length; i++){
 	let plNo = getRandomInt(cultures[keys[i]]["playlist"].length);
 	let playlist = cultures[keys[i]]["playlist"][plNo];
 	let newD = document.createElement("row");
-<<<<<<< HEAD
 	newD.innerHTML = `<div><div class="cont"><img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" 
 	style="padding:10px;width:200px;height:200px;display:inline;"> <div class="middle"><div class="text">${culture}</div></div>`;
-=======
-	newD.innerHTML = `<img  src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
->>>>>>> 01e80260a7057a7d991cf7e7f51ec13f532d52d2
+	newD.innerHTML = `<img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
 	newF.appendChild(newD);
  }	
  //add the listeners
@@ -160,8 +163,9 @@ for( let i = 0; i < keys.length; i++){
 	console.log(event.target.id);
 	country = event.target.id;
 	event.preventDefault();
-	fetchPlaylist(country);
 	fetchRecipes(country);
+	fetchPlaylist(country);
+	
 	console.log(testVar);
 	let myObj = document.querySelector('#selectCulture');
 	myObj.remove();

@@ -1,0 +1,44 @@
+.image {
+    min-width: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    max-width: 200px;
+    padding: 10px; 
+}
+.overlay-image .hover {
+    position: absolute;
+    top: 0;
+    height: 200px;
+    width: 200px;
+    opacity: 0;
+    transition: .5s;
+    background-color: rgba(0,0,0,0.5);
+    color: azure;
+   }
+
+.overlay-image .text {
+    margin: 0;
+    color: white;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+   }
+
+
+   /* New overlay appearance on hover */
+   .overlay-image:hover .hover{
+    opacity: 1;       
+   }
+
+   .overlay-image:hover .text{
+    opacity: 1;
+   }
+
+   .overlay-image .normal {
+    transition: .2s ease;
+   }
+   .overlay-image:hover .normal {
+    opacity: 0;
+   }
