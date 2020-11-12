@@ -123,17 +123,16 @@ var id="",imgLink
 	  //Parsing the response so that we can store the individual values
 		.then(response => {
 			let id = response["id"]
-			let url = response["link"]
-		    let imgLink = response["picture_small"]
+			let url = encodeURI(response["link"]);
+		    let imgLink = encodeURI(response["picture_small"]);
 			let title = response["title"]
-            let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
+            let plDet= `{"id": "${id}","title": "${title}","image": "${imgLink}","link": "${url}"}`;
 			dataPlaylist.push(plDet);
-	        console.log(plDet); 
     	})
 	.catch(err => {
 	console.error(err);
 	});
-	localStorage.setItem("playlist",dataPlaylist);
+	localStorage.setItem("playlist",JSON.stringify(dataPlaylist));
    }
 }
 
@@ -160,8 +159,7 @@ async function createDetailRecipeButtons(){
 		resPg.appendChild(newP);
 		return;
 	} else {
-		newT = document.createElement("table");
-		localStorage.getItem("recipes")
+		let newT = document.createElement("table");
 		newT.setAttribute("class","table is-fullwidth");
 		newT.setAttribute("id","selectRecipe");
 		for(let i=0;i < myRecipes.length;i++){
@@ -169,15 +167,15 @@ async function createDetailRecipeButtons(){
 			let myRecipes1 = JSON.parse(myRecipes[i])
 			// we needed to encode the link and the description or we had a JSON parse error so decoding it
 			// @Geoff - the desc is too big so chaning this to the title - we can use the desc when we click the link
-			//let desc = decodeURI(myRecipes1.description);	
+			let desc = decodeURI(myRecipes1.description);	
 			let title = myRecipes1.title;
 			let recpId = myRecipes1.id;
-			//let title = decodeURI(myRecipes1.title);
+			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
+
 			newR = document.createElement("tr");
-			newR.setAttribute("id",recpId)
 			if(i % 2 === 0){
-			newR.innerHTML=`<td>${title}</td><td><img src=${image}></td>`
+			newR.innerHTML=`<td id=${recpId}>${title}</td><td id=${recpId}><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
 			newR.innerHTML=`<td><img src=${image}></td><td>${title}</td>`
@@ -189,7 +187,6 @@ async function createDetailRecipeButtons(){
 		 //add the listener for the recipe (on row for now)
 		 let btnSelect = document.querySelector(`#selectRecipe`);
           btnSelect.addEventListener('click', (event) => {
-	      console.log(event.target.id);
 	      let recp = event.target.id;
 	      event.preventDefault();
 		  finalPage(recp);
@@ -201,14 +198,59 @@ async function createDetailRecipeButtons(){
 
 	}
 
-function finalPage(recipe){
+function finalPage(recId){
+	// get the place where we are going to put the page
 	let resPg = document.querySelector('#culture-cards');
-	newP = document.createElement("p");
-	newP.textContent = ("This will have to be developed ... tomorrow! \
-						 Fixed the playlist so if you want to go ahead I get the recipe info and the playlist all the fetches are done! \
-						 just remember to use decodeURI on description & recipeUrl - from the recipe objects")
-
-	resPg.appendChild(newP)	
+	// get music and playlist from local memory
+	let myRecipes = JSON.parse(localStorage.getItem("recipes"));
+	let myMusic = JSON.parse(localStorage.getItem("playlist"));
+	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
+	//console.log(typeof(myRecipes), myRecipes,recId);
+	let newT = document.createElement("table");
+	let newD = document.createElement("div");
+	newD.setAttribute("class","columns is-3")
+	newT.setAttribute("class","table is-fullwidth");
+	let rRow = document.createElement("tr")
+	let rCol = document.createElement("td")
+	rCol.setAttribute("class","column is-two-thirds has-text-left")
+    for (let i = 0;i < myRecipes.length; i++){
+	let myRecipes1 = JSON.parse(myRecipes[i]);
+	//Process the recipe so we have all the links (we have this but think @Geo going to try iframe)
+	if(myRecipes1.id == recId){
+			rdesc = decodeURI(myRecipes1.description);	
+			rtitle = myRecipes1.title;
+			recpId = myRecipes1.id;
+			rlink = decodeURI(myRecipes1.recipeUrl);
+			rimage = myRecipes1.image;
+	        }
+	}
+	rhtml=`<p class="has-text-weight-semibold">${rtitle}<br></p><p>${rdesc}</p><p><a href="${rlink}">${rtitle}<a></p>`;
+	//add the html to the col
+	rCol.innerHTML=rhtml;
+	
+    // parse out playlists
+	myMusic = JSON.parse(localStorage.getItem("playlist"));
+	let myMusic1=[];
+	let mCol = document.createElement("td");
+	mCol.setAttribute("class","is-justify-content-center");
+	for( let i =0; i < myMusic.length; i++){
+		//has same issue I stored things json format so need to convert back to process individual too
+		 myMusic1 = JSON.parse(myMusic[i]); 
+		let mtitle = myMusic1.title;
+		let mimage = decodeURI(myMusic1.image);
+		let mlink = decodeURI(myMusic1.link);
+		let thtml = `<p><figure class="image is-128x128">
+		<img class="is-rounded" src="${mimage}"></img>
+		<a href="${mlink}"><p>${mtitle}</p></a></figure><br></p>`
+		mhtml += thtml
+	}
+	//add the html to the col
+	mCol.innerHTML = mhtml;
+	//append colums to table
+	newT.appendChild(rCol);
+	newT.appendChild(mCol);
+	//add the table to the page
+	resPg.appendChild(newT);
 }	
 
 
@@ -237,9 +279,7 @@ for( let i = 0; i < keys.length; i++){
  abc.appendChild(newF);
  let btnSelect = document.querySelector(`#selectCulture`);
   btnSelect.addEventListener('click', (event) => {
-	console.log(event.target.id);
 	country = event.target.id;
-	console.log("Country ",country)
 	event.preventDefault();
 	fetchRecipes(country);
 	fetchPlaylist(country);
