@@ -59,7 +59,7 @@ function fetchRecipes (cuisine){
 	}
 	
 //------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
-fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=862113360871404295a6f02d2778f8ed`, {
+fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=99493ec7b2934e05a34e73942f62b56a`, {
  })
    .then(function(resp) {
    return resp.json();
@@ -72,7 +72,7 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
 	id = recipes[i]["id"];
 	img = recipes[i]["image"];
 	title = recipes[i]["title"];
-	ret =	fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`, {
+	ret =	fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=99493ec7b2934e05a34e73942f62b56a`, {
 	        	})
 	  	      .then(function(resp) {
 	  	      return resp.json();
@@ -82,12 +82,8 @@ fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&numb
 			   url = response1["spoonacularSourceUrl"];
 			   return (description,url);
 	         })
-	// let url = 	`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=862113360871404295a6f02d2778f8ed`
-	// let newA=document.createElement("tr")
-	// newA.innerHTML = `<a href="${url}"><img src=${img} style="width:100px;height:100px;" alt="${title}"</a>${title}`;
-	// resPg.appendChild(newA);
 	console.log(description,url," and ",ret);
-	let recp = `{id: ${id},title: ${title},image: ${img},description: ${description},recipeUrl: ${url}}`;
+	let recp = `{"id": "${id}","title": "${title}","image": "${img}","description": "${description}","recipeUrl": "${url}"}`;
 	dataRespone.push(recp);
 	}
 	localStorage.setItem("recipes",JSON.stringify(dataRespone));
@@ -148,14 +144,12 @@ async function createDetailRecipeButtons(){
 	var myRecipes = [], myPlaylists = [];
 	//going to check if my playlist and recipe list is there waits up to 40 second
 	for ( let i = 0; i < 40; i++){	
-
 		if(localStorage.getItem("recipes")){
 			myRecipes = JSON.parse(localStorage.getItem("recipes"));
 			//myPlaylists = JSON.parse(localStorage.getItem("playlist"));
 			i = 41;
 		} else {
 			await new Promise(resolve => setTimeout(resolve, 1000));
-
 		}
 	}
 
@@ -168,13 +162,14 @@ async function createDetailRecipeButtons(){
 	} else {
 		newT = document.createElement("table");
 		localStorage.getItem("recipes")
-		//newT.setAttribute("class","table is-fullwidth");
-		
+		newT.setAttribute("class","table is-fullwidth");
 		for(let i=0;i < myRecipes.length;i++){
+			
+			let myRecipes1 = JSON.parse(myRecipes[i])
 			console.log("aray",myRecipes[i])
-			console.log("what is ",typeof(myRecipes[i]))
-			let desc = myRecipes[i].description;
-			let image = myRecipes[i].image;
+			console.log("what is ",myRecipes1)
+			let desc = myRecipes1.description;
+			let image = myRecipes1.image;
 			newR = document.createElement("tr");
 			if(i % 2 === 0){
 				console.log("here",image)
@@ -212,8 +207,6 @@ for( let i = 0; i < keys.length; i++){
 	let plNo = getRandomInt(cultures[keys[i]]["playlist"].length);
 	let playlist = cultures[keys[i]]["playlist"][plNo];
 	let newD = document.createElement("row");
-	// newD.innerHTML = `<div><div class="cont"><img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" 
-	// style="padding:10px;width:200px;height:200px;display:inline;"> <div class="middle"><div class="text">${culture}</div></div>`;
 	newD.innerHTML = `<img src="../images/${lc}/${image}" id=${culture} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
 	newF.appendChild(newD);
  }	
