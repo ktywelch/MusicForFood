@@ -164,17 +164,13 @@ async function createDetailRecipeButtons(){
 		localStorage.getItem("recipes")
 		newT.setAttribute("class","table is-fullwidth");
 		for(let i=0;i < myRecipes.length;i++){
-			
+			//because we store it as an object we need to do a second JSON.parse
 			let myRecipes1 = JSON.parse(myRecipes[i])
-			console.log("aray",myRecipes[i])
-			console.log("what is ",myRecipes1)
 			let desc = myRecipes1.description;
 			let image = myRecipes1.image;
 			newR = document.createElement("tr");
 			if(i % 2 === 0){
-				console.log("here",image)
-			 newR.innerHTML=`<td>${desc}</td><td><img src=${image}></td>`
-
+			newR.innerHTML=`<td>${desc}</td><td><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
 			newR.innerHTML=`<td><img src=${image}</td><td><${desc}></td>`
