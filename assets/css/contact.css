@@ -1,3 +1,4 @@
+
 body {
     text-align: center;
     border-radius:5px;
@@ -5,7 +6,8 @@ body {
 }
 
 section {
-    background-color: cadetblue;
+    background-color: rgb(189, 208, 209);
+    margin: 0px 50px;
 }
 
 h1 {
@@ -17,26 +19,29 @@ h1 {
 }
 
 .hero-body {
-    background-color: rgb(220, 218, 231);
+    background-color: rgb(210, 208, 221);
+    margin: 10px;
+    margin: 0 40px;
 }
-<<<<<<< HEAD
 
 .h1 {
     font-weight: bolder;
-    color:cadetblue ;
-    font-size: 30px;
+    color:rgb(160, 139, 95);
+    font-size: 20px;
     font-family: 'Times New Roman', Times, serif;
 }
 .container {
     display: inline-block;
     background-color: rgb(187, 194, 194);
     text-align: center;
-    width: 50%;
     margin: auto;
+    padding: 20px;
+    
 }
 .textarea {
     
     border-radius: 10%;
+    width: 50%;
 }
 
 input {
@@ -47,5 +52,6 @@ border: burlywood solid 1px;
     width: fit-content;
     color: crimson;
 }
-=======
->>>>>>> 1134904a42623c8f6bbf18459cb543924b9da065
+.navbar-menu {
+    
+}
