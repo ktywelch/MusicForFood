@@ -6,7 +6,8 @@ body {
 }
 
 section {
-    background-color: cadetblue;
+    background-color: rgb(189, 208, 209);
+    margin: 0px 50px;
 }
 
 h1 {
@@ -18,5 +19,7 @@ h1 {
 }
 
 .hero-body {
-    background-color: rgb(220, 218, 231);
+    background-color: rgb(210, 208, 221);
+    margin: 10px;
+    margin: 0 40px;
 }

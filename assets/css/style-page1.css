@@ -1,17 +1,19 @@
 body {
     text-align: center;
     border-radius:5px;
-    background-color: rgb(253, 252, 252);
+    background-color: rgb(221, 207, 207);
+    margin: 20px;
 }
 
-section {
-    background-color: cadetblue;
-}
+/* section {
+    /* background-color: cadetblue;
+        margin: 10px;
+    } */ */
 
 
 
 
- 
+
 .button:hover {
 color: mediumaquamarine;
 font-size: large;
@@ -24,7 +26,7 @@ font-weight: bolder;
 }
 
 .hero-body {
-    background-color: rgb(220, 218, 231);
+    background-color: rgb(180, 176, 199);
 }
 
 .title {
