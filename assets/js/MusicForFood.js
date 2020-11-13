@@ -51,7 +51,7 @@ const cultures = {
 // Old API exceeded daily so need to wait to reuse
 //var recpAPI = "579753ff1b574d34b8ee1dcf5a821aa9";
 //var recpAPI = "287cb63de4fa4f29a7e39554c076b89a";
-var recpAPI = "99493ec7b2934e05a34e73942f62b56a";
+var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
 
 //Fetch 5 Recipes
 async function fetchRecipes (cuisine){
@@ -65,7 +65,7 @@ async function fetchRecipes (cuisine){
 	}
 	
 //------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
-await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=${recpAPI}`, {
+await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=${recpAPIKey}`, {
  })
    .then(function(resp) {
    return resp.json();
@@ -77,7 +77,7 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 	id = recipes[i]["id"];
 	img = recipes[i]["image"];
 	title = recipes[i]["title"];
-    await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=${recpAPI}`, {
+    await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=${recpAPIKey}`, {
 	        	})
 	  	    .then(function(mresp) {
 	  	      return mresp.json();
@@ -181,11 +181,13 @@ async function createDetailRecipeButtons(){
 			let winePair =  decodeURI(myRecipes1.winePair);
 
 			newR = document.createElement("tr");
+			newR.setAttribute("id",recpId);
+			console.log(recpId);
 			if(i % 2 === 0){
-			newR.innerHTML=`<td id=${recpId}>${title}<p>${winePair}</p></td><td id=${recpId}><img src=${image}></td>`
+			newR.innerHTML=`<td id=${recpId}>${title}<p id=${recpId} >${winePair}</p></td><td id=${recpId}><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
-			newR.innerHTML=`<td id=${recpId}><img src=${image}></td><td>${title}<p>${winePair}</p></td>`
+			newR.innerHTML=`<td id=${recpId}><img src=${image}></td><td>${title}<p id=${recpId}>${winePair}</p></td>`
 			newT.appendChild(newR)	
 			}
 			
@@ -194,7 +196,8 @@ async function createDetailRecipeButtons(){
 		 //add the listener for the recipe (on row for now)
 		 let btnSelect = document.querySelector(`#selectRecipe`);
           btnSelect.addEventListener('click', (event) => {
-	      let recp = event.target.id;
+		  let recp = event.target.id;
+		  console.log(event);
 	      event.preventDefault();
 		  finalPage(recp);
 		  //cleaning up the page after button is clicked
@@ -212,30 +215,41 @@ function finalPage(recId){
 	let myRecipes = JSON.parse(localStorage.getItem("recipes"));
 	let myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
-	//console.log(typeof(myRecipes), myRecipes,recId);
+	console.log(typeof(myRecipes), myRecipes,recId);
+	console.log(recId);
 	let newT = document.createElement("div");
-	newT.setAttribute("class","container")
-	let newD = document.createElement("div");
-	newD.setAttribute("class","container")
-	newT.setAttribute("class","is-fullwidth");
-	let rRow = document.createElement("div")
-	let rCol = document.createElement("div")
-	rCol.setAttribute("class","column is-two-thirds has-text-left")
-    for (let i = 0;i < myRecipes.length; i++){
+	// newT.setAttribute("class","container")
+	// let newD = document.createElement("div");
+	// newD.setAttribute("class","container")
+	// newT.setAttribute("class","is-fullwidth");
+	// let rRow = document.createElement("div")
+	// let rCol = document.createElement("div")
+	// rCol.setAttribute("class","column is-two-thirds has-text-left")
+     for (let i = 0;i < myRecipes.length; i++){
 	let myRecipes1 = JSON.parse(myRecipes[i]);
-	//Process the recipe so we have all the links (we have this but think @Geo going to try iframe)
+	// //Process the recipe so we have all the links (we have this but think @Geo going to try iframe)
 	if(myRecipes1.id == recId){
-			rdesc = decodeURI(myRecipes1.description);	
-			rtitle = myRecipes1.title;
-			recpId = myRecipes1.id;
-			rlink = decodeURI(myRecipes1.recipeUrl);
-			rimage = myRecipes1.image;
-	        }
+	// 		rdesc = decodeURI(myRecipes1.description);	
+	// 		rtitle = myRecipes1.title;
+	// 		recpId = myRecipes1.id;
+			 rlink = decodeURI(myRecipes1.recipeUrl);
+			 
+	// 		rimage = myRecipes1.image;
+	         }
 	}
-	rhtml=`<p class="has-text-weight-semibold">${rtitle}<br></p><p>${rdesc}</p><p><a href="${rlink}">${rtitle}<a></p>`;
-	//add the html to the col
-	rCol.innerHTML=rhtml;
+	console.log("rlink",rlink)
+	rhtml = `<figure class="image is-16by9">  
+	<iframe class="has-ratio" width="640" height="360" src="${rlink}" 
+	frameborder="0" allowfullscreen></iframe></figure>`;
+	newT.innerHTML=rhtml
+	resPg.appendChild(newT);
+
+	// rhtml=`<p class="has-text-weight-semibold">${rtitle}<br></p><p>${rdesc}</p><p><a href="${rlink}">${rtitle}<a></p>`;
+	// //add the html to the col
+	// rCol.innerHTML=rhtml;
 	
+
+
     // parse out playlists
 	myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let myMusic1=[];
@@ -252,13 +266,8 @@ function finalPage(recId){
 		<a href="${mlink}"><p>${mtitle}</p></a></figure><br></p>`
 		mhtml += thtml
 	}
-	//add the html to the col
 	mCol.innerHTML = mhtml;
-	//append colums to table
-	newT.appendChild(rCol);
-	newT.appendChild(mCol);
-	//add the table to the page
-	resPg.appendChild(newT);
+	resPg.appendChild(mCol);
 }	
 
 
