@@ -258,11 +258,14 @@ function finalPage(recId){
 		let mlink = decodeURI(myMusic1.link);
 		let newD = document.createElement("div")
 		//let newa
-		let thtml = `<div class="box"><p>
+
+
+
+		let thtml = `<iframe style="width:100px;height:150px;padding:10px;">
 		<a href="${mlink}">
 		<figure class="image is-128x128">
 		<img src="${mimage}"></img>
-		<br><p>${mtitle}</p></figure></a></p></div>`
+		<br><p>${mtitle}</p></figure></a></p></iframe>`
 		mhtml += thtml
 	}
 	mDiv.innerHTML = mhtml;
