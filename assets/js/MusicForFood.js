@@ -56,7 +56,7 @@ var recpAPI = "99493ec7b2934e05a34e73942f62b56a";
 //Fetch 5 Recipes
 async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
- let num=10,id="",img="",title="",description="",url="",recipes=[];
+ let num=5,id="",img="",title="",description="",url="",recipes=[],winePair="";
  let dataResponse = [], recp = {},fetches =[];
  let resPg = document.querySelector('#culture-cards')
  	//clear the recipe storage before we start
@@ -85,7 +85,8 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
    		      .then(response1 => {	
 			   description = encodeURI(response1["summary"]);
 			   url = encodeURI(response1["spoonacularSourceUrl"]);
-			   recp = `{"id": "${id}","title": "${title}","image": "${img}","description": "${description}","recipeUrl": "${url}"}`;			   
+               winePair=encodeURI(response1["winePairing"]["pairingText"]);
+			   recp = `{"id": "${id}","title": "${title}","image": "${img}","winePair": "${winePair}","description": "${description}","recipeUrl": "${url}"}`;			   
 			   dataResponse.push(recp)			 		   
 			 })
 	}
@@ -177,13 +178,14 @@ async function createDetailRecipeButtons(){
 			let recpId = myRecipes1.id;
 			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
+			let winePair =  decodeURI(myRecipes1.winePair);
 
 			newR = document.createElement("tr");
 			if(i % 2 === 0){
-			newR.innerHTML=`<td id=${recpId}>${title}</td><td id=${recpId}><img src=${image}></td>`
+			newR.innerHTML=`<td id=${recpId}>${title}<p>${winePair}</p></td><td id=${recpId}><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
-			newR.innerHTML=`<td><img src=${image}></td><td>${title}</td>`
+			newR.innerHTML=`<td id=${recpId}><img src=${image}></td><td>${title}<p>${winePair}</p></td>`
 			newT.appendChild(newR)	
 			}
 			
@@ -211,12 +213,13 @@ function finalPage(recId){
 	let myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
 	//console.log(typeof(myRecipes), myRecipes,recId);
-	let newT = document.createElement("table");
+	let newT = document.createElement("div");
+	newT.setAttribute("class","container")
 	let newD = document.createElement("div");
-	newD.setAttribute("class","columns is-3")
-	newT.setAttribute("class","table is-fullwidth");
-	let rRow = document.createElement("tr")
-	let rCol = document.createElement("td")
+	newD.setAttribute("class","container")
+	newT.setAttribute("class","is-fullwidth");
+	let rRow = document.createElement("div")
+	let rCol = document.createElement("div")
 	rCol.setAttribute("class","column is-two-thirds has-text-left")
     for (let i = 0;i < myRecipes.length; i++){
 	let myRecipes1 = JSON.parse(myRecipes[i]);
@@ -236,7 +239,7 @@ function finalPage(recId){
     // parse out playlists
 	myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let myMusic1=[];
-	let mCol = document.createElement("td");
+	let mCol = document.createElement("div");
 	mCol.setAttribute("class","is-justify-content-center");
 	for( let i =0; i < myMusic.length; i++){
 		//has same issue I stored things json format so need to convert back to process individual too
