@@ -48,11 +48,15 @@ const cultures = {
 		playlist: [4779177244,8146526982,5353448802,6514155104,272400133]
 	}
 }
+// Old API exceeded daily so need to wait to reuse
+//var recpAPI = "579753ff1b574d34b8ee1dcf5a821aa9";
+//var recpAPI = "287cb63de4fa4f29a7e39554c076b89a";
+var recpAPI = "99493ec7b2934e05a34e73942f62b56a";
 
 //Fetch 5 Recipes
 async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
- let num=5,id="",img="",title="",description="",url="",recipes=[];
+ let num=10,id="",img="",title="",description="",url="",recipes=[];
  let dataResponse = [], recp = {},fetches =[];
  let resPg = document.querySelector('#culture-cards')
  	//clear the recipe storage before we start
@@ -61,8 +65,7 @@ async function fetchRecipes (cuisine){
 	}
 	
 //------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
-await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=579753ff1b574d34b8ee1dcf5a821aa9
-`, {
+await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=${recpAPI}`, {
  })
    .then(function(resp) {
    return resp.json();
@@ -74,7 +77,7 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 	id = recipes[i]["id"];
 	img = recipes[i]["image"];
 	title = recipes[i]["title"];
-    await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=579753ff1b574d34b8ee1dcf5a821aa9`, {
+    await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=${recpAPI}`, {
 	        	})
 	  	    .then(function(mresp) {
 	  	      return mresp.json();
