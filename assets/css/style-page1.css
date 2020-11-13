@@ -10,18 +10,7 @@ section {
 
 
 
-#navbarMenuHeroC {
-    background-color: cadetblue; 
-    display: inline;
-    padding: 50px;
-    text-align: center;
-}
 
-#navbarMenuHeroC:hover {
-color: rgb(75, 56, 75);
-font-weight: bolder;
-font-size: large;
-}
  
 .button:hover {
 color: mediumaquamarine;
@@ -49,3 +38,4 @@ h2 {
     font-size: 50px;
     font-weight: 800;
 }
+
