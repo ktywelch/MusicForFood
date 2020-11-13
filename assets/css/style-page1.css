@@ -34,6 +34,10 @@ body {
     background-color: darkkhaki;
     padding: 90px;
     margin: 60px;
+    background-image: url(../images/indian/martin-jernberg-nE2gf1scItI-unsplash.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-blend-mode: color;
 
 }
 
