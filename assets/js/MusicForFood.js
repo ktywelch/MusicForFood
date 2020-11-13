@@ -1,4 +1,6 @@
-var testVar=""
+/* script sets up arrays for images to depict cultures we want to represent on the app and to control the playlists 
+because the APIs we looked at for music do not specify culture but rahter music Genre and when searching it is difficult to decern a 
+culture (like French from an artist or group with French in the name) so we manually selected the PL from the provider */
 const cultures = {
 	French: {
 		images: ["anthony-delanoix-Q0-fOL2nqZc-unsplash.jpg","adrien-tutin-hCh_PHIhoLI-unsplash.jpg",
@@ -7,7 +9,7 @@ const cultures = {
 		altImage: ["Eiffel Tower Picture taken by Anthony Delanoix","Castle Wall by Adrien Tutin unsplash",
 		"Photo of the Louvre by Daniele D Andreti unsplash","Lavendar field by Leonard Cotte unsplash",
 		"Macrons by Niclas Illg unsplash","La Rochelle by Romain Huneau unsplash"],
-		playlist: [3748969686,6553706304]//,1737848082,7881922322,5574391562]
+		playlist: [3748969686,6553706304,1737848082,7881922322,5574391562]
 	},
 	Indian: {
 		images: ["annie-spratt-w3CyGs-keEM-unsplash.jpg","debashis-rc-biswas-xAWb6qDCXDU-unsplash.jpg","julian-yu-_WuPjE-MPHo-unsplash.jpg",
@@ -15,7 +17,7 @@ const cultures = {
 		altImage: ["Indian Building taken by Annie Spratt","Festival of Color by Debashis Biswas unsplash",
 		"Taj Mahal by Julian Yuyu-_WuPjE-MPHo-unsplash","Walled City of JaiPur by  Kirti Kalla unsplash",
 		"Victoria Memorial by Martin Jernberg unsplash","Statue of Ganesh Sonika Agarwal unsplash.jpg",],
-		playlist: [808923603,7723841822]//,5397210322,2484275588,6124514764]
+		playlist: [808923603,7723841822,5397210322,2484275588,6124514764]
 	},
 	Mexican:  {
 		images: ["jimmy-baum-NjdpeYDHNrQ-unsplash.jpg","2-mexican-fiesta-sushobha-jenner-canvas-print.jpg",
@@ -24,7 +26,7 @@ const cultures = {
 		altImage: ["Mayan Temple taken by Jimmy Baum","Mexican Fiesta on Canvas Print","Painting man in sombrero sleeping in desert",
 		"taco burrito chips and salsa print","cartoon doodles hand drawn mexican food illustration from Doodles Vector Art",
 	    "Mexican Flag","Mexican food images"],
-		playlist: [5212851564,4923634428]//,3712532246,4522361286,7987112122]
+		playlist: [5212851564,4923634428,3712532246,4522361286,7987112122]
 	},
 	Chinese:  {
 		images: ["alexander-schimmeck-gUtcrNunbCM-unsplash.jpg","cat-crawford-FRSSDv3mAy8-unsplash.jpg",
@@ -34,7 +36,7 @@ const cultures = {
 		altImage: ["Terracotta Army taken by Alexander Schimmeck","The Great Wall of China by Cat Crawford",
 				"Chinese Latern by Makus Winkler","Traditioan Fishing by Sam Beasley","Reflected Mountain by Shane Young",
 			    "Chinese Temple by Victor He","Oriental Pearl Tower by Yiranding"],
-		playlist: [4962135028,6224909624]//,969940552,6431991064,6885856824,6324317944]
+		playlist: [4962135028,6224909624,969940552,6431991064,6885856824,6324317944]
 	},
 	Italian:  {
 		images: ["italian images.jpg","BumperSticker.jpg","Italian-12icons.jpg","ItalianFlag.jpg",
@@ -43,7 +45,7 @@ const cultures = {
 		altImage: ["Image of pizza wirh italian flag","Italian Bumper Sticker","Italian popster with 12 food icons",
 		"Italian flag projected on building","Poster of Italian Food","Colleseum by Braden Collum unsplash",
 		"Venice Canals by Damiano Baschiera","italiancuisine traditional poster","Riomaggiore by Jack Ward"],
-		playlist: [4779177244,8146526982]//,5353448802,6514155104,272400133]
+		playlist: [4779177244,8146526982,5353448802,6514155104,272400133]
 	}
 }
 
@@ -123,17 +125,16 @@ var id="",imgLink
 	  //Parsing the response so that we can store the individual values
 		.then(response => {
 			let id = response["id"]
-			let url = response["link"]
-		    let imgLink = response["picture_small"]
+			let url = encodeURI(response["link"]);
+		    let imgLink = encodeURI(response["picture_small"]);
 			let title = response["title"]
-            let plDet= `{id: ${id},title: ${title},image: ${imgLink},link: ${url}}`;
+            let plDet= `{"id": "${id}","title": "${title}","image": "${imgLink}","link": "${url}"}`;
 			dataPlaylist.push(plDet);
-	        console.log(plDet); 
     	})
 	.catch(err => {
 	console.error(err);
 	});
-	localStorage.setItem("playlist",dataPlaylist);
+	localStorage.setItem("playlist",JSON.stringify(dataPlaylist));
    }
 }
 
@@ -160,8 +161,7 @@ async function createDetailRecipeButtons(){
 		resPg.appendChild(newP);
 		return;
 	} else {
-		newT = document.createElement("table");
-		localStorage.getItem("recipes")
+		let newT = document.createElement("table");
 		newT.setAttribute("class","table is-fullwidth");
 		newT.setAttribute("id","selectRecipe");
 		for(let i=0;i < myRecipes.length;i++){
@@ -169,15 +169,15 @@ async function createDetailRecipeButtons(){
 			let myRecipes1 = JSON.parse(myRecipes[i])
 			// we needed to encode the link and the description or we had a JSON parse error so decoding it
 			// @Geoff - the desc is too big so chaning this to the title - we can use the desc when we click the link
-			//let desc = decodeURI(myRecipes1.description);	
+			let desc = decodeURI(myRecipes1.description);	
 			let title = myRecipes1.title;
 			let recpId = myRecipes1.id;
-			//let title = decodeURI(myRecipes1.title);
+			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
+
 			newR = document.createElement("tr");
-			newR.setAttribute("id",recpId)
 			if(i % 2 === 0){
-			newR.innerHTML=`<td>${title}</td><td><img src=${image}></td>`
+			newR.innerHTML=`<td id=${recpId}>${title}</td><td id=${recpId}><img src=${image}></td>`
 			newT.appendChild(newR)
 			} else {
 			newR.innerHTML=`<td><img src=${image}></td><td>${title}</td>`
@@ -189,7 +189,6 @@ async function createDetailRecipeButtons(){
 		 //add the listener for the recipe (on row for now)
 		 let btnSelect = document.querySelector(`#selectRecipe`);
           btnSelect.addEventListener('click', (event) => {
-	      console.log(event.target.id);
 	      let recp = event.target.id;
 	      event.preventDefault();
 		  finalPage(recp);
@@ -201,14 +200,59 @@ async function createDetailRecipeButtons(){
 
 	}
 
-function finalPage(recipe){
+function finalPage(recId){
+	// get the place where we are going to put the page
 	let resPg = document.querySelector('#culture-cards');
-	newP = document.createElement("p");
-	newP.textContent = ("This will have to be developed ... tomorrow! \
-						 Fixed the playlist so if you want to go ahead I get the recipe info and the playlist all the fetches are done! \
-						 just remember to use decodeURI on description & recipeUrl - from the recipe objects")
-
-	resPg.appendChild(newP)	
+	// get music and playlist from local memory
+	let myRecipes = JSON.parse(localStorage.getItem("recipes"));
+	let myMusic = JSON.parse(localStorage.getItem("playlist"));
+	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
+	//console.log(typeof(myRecipes), myRecipes,recId);
+	let newT = document.createElement("table");
+	let newD = document.createElement("div");
+	newD.setAttribute("class","columns is-3")
+	newT.setAttribute("class","table is-fullwidth");
+	let rRow = document.createElement("tr")
+	let rCol = document.createElement("td")
+	rCol.setAttribute("class","column is-two-thirds has-text-left")
+    for (let i = 0;i < myRecipes.length; i++){
+	let myRecipes1 = JSON.parse(myRecipes[i]);
+	//Process the recipe so we have all the links (we have this but think @Geo going to try iframe)
+	if(myRecipes1.id == recId){
+			rdesc = decodeURI(myRecipes1.description);	
+			rtitle = myRecipes1.title;
+			recpId = myRecipes1.id;
+			rlink = decodeURI(myRecipes1.recipeUrl);
+			rimage = myRecipes1.image;
+	        }
+	}
+	rhtml=`<p class="has-text-weight-semibold">${rtitle}<br></p><p>${rdesc}</p><p><a href="${rlink}">${rtitle}<a></p>`;
+	//add the html to the col
+	rCol.innerHTML=rhtml;
+	
+    // parse out playlists
+	myMusic = JSON.parse(localStorage.getItem("playlist"));
+	let myMusic1=[];
+	let mCol = document.createElement("td");
+	mCol.setAttribute("class","is-justify-content-center");
+	for( let i =0; i < myMusic.length; i++){
+		//has same issue I stored things json format so need to convert back to process individual too
+		 myMusic1 = JSON.parse(myMusic[i]); 
+		let mtitle = myMusic1.title;
+		let mimage = decodeURI(myMusic1.image);
+		let mlink = decodeURI(myMusic1.link);
+		let thtml = `<p><figure class="image is-128x128">
+		<img class="is-rounded" src="${mimage}"></img>
+		<a href="${mlink}"><p>${mtitle}</p></a></figure><br></p>`
+		mhtml += thtml
+	}
+	//add the html to the col
+	mCol.innerHTML = mhtml;
+	//append colums to table
+	newT.appendChild(rCol);
+	newT.appendChild(mCol);
+	//add the table to the page
+	resPg.appendChild(newT);
 }	
 
 
@@ -237,9 +281,7 @@ for( let i = 0; i < keys.length; i++){
  abc.appendChild(newF);
  let btnSelect = document.querySelector(`#selectCulture`);
   btnSelect.addEventListener('click', (event) => {
-	console.log(event.target.id);
 	country = event.target.id;
-	console.log("Country ",country)
 	event.preventDefault();
 	fetchRecipes(country);
 	fetchPlaylist(country);
