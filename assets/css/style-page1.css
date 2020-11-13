@@ -13,43 +13,7 @@ body {
 
 
 
-#navbar {
-    background-color: cadetblue; 
-    display: inline;
-    padding: 50px;
-    text-align: center;
-}
-.fields {
-    background-color: darkkhaki;
 
-}
-.navbarMenuHeroC:hover{
-    font-size: large;
-    font-weight:bolder ;
-}
-.about {
-    display: inline-block;
-}
-.text {
-    background-color: darkkhaki;
-    padding: 90px;
-    margin: 60px;
-    background-image: url(../images/indian/martin-jernberg-nE2gf1scItI-unsplash.jpg);
-    background-attachment: fixed;
-    background-size: cover;
-    background-blend-mode: color;
-
-}
-
-#navbarMenu:hover {
-color: rgb(75, 56, 75);
-font-weight: bolder;
-font-size: large;
-}
-/* .container1 {
-  background-color:rgb(180, 176, 199);
-}
-  */
 .button:hover {
 color: mediumaquamarine;
 font-size: large;
@@ -76,3 +40,4 @@ h2 {
     font-size: 50px;
     font-weight: 800;
 }
+

@@ -23,35 +23,3 @@ h1 {
     margin: 10px;
     margin: 0 40px;
 }
-
-.h1 {
-    font-weight: bolder;
-    color:rgb(160, 139, 95);
-    font-size: 20px;
-    font-family: 'Times New Roman', Times, serif;
-}
-.container {
-    display: inline-block;
-    background-color: rgb(187, 194, 194);
-    text-align: center;
-    margin: auto;
-    padding: 20px;
-    
-}
-.textarea {
-    
-    border-radius: 10%;
-    width: 50%;
-}
-
-input {
-border: burlywood solid 1px;
-}
-#alert {
-    height: fit-content;
-    width: fit-content;
-    color: crimson;
-}
-.navbar-menu {
-    
-}
