@@ -250,24 +250,32 @@ function finalPage(recId){
 	let myMusic1=[];
 	let mDiv = document.createElement("div");
 	mDiv.setAttribute("class","column is-half");
-	for( let i =0; i < myMusic.length; i++){
-		//has same issue I stored things json format so need to convert back to process individual too
+
+    let i = getRandomInt(myMusic.length)
+	// for( let i =0; i < myMusic.length; i++){
+	// 	//has same issue I stored things json format so need to convert back to process individual too
 		 myMusic1 = JSON.parse(myMusic[i]); 
-		let mtitle = myMusic1.title;
-		let mimage = decodeURI(myMusic1.image);
-		let mlink = decodeURI(myMusic1.link);
+		 let plid = decodeURI(myMusic1.id);
+		// let mtitle = myMusic1.title;
+		// let mimage = decodeURI(myMusic1.image);
+		//let mlink = decodeURI(myMusic1.link);
 		let newD = document.createElement("div")
 		//let newa
+	   //<img src="${mimage}"></img>
+	   // <br><p>${mtitle}</p></figure></a></p></iframe>`
+		
+	
+		// let thtml = `<figure class="image is-128x128">
+		// <iframe style="width:100px;height:150px;padding:10px;"
+		// src ="${mlink}">
+		
+		// <br><p>${mtitle}</p></figure></a></p></iframe>`
 
-
-
-		let thtml = `<iframe style="width:100px;height:150px;padding:10px;">
-		<a href="${mlink}">
-		<figure class="image is-128x128">
-		<img src="${mimage}"></img>
-		<br><p>${mtitle}</p></figure></a></p></iframe>`
-		mhtml += thtml
-	}
+		mhtml = `<iframe scrolling="no" frameborder="0" allowTransparency="true" 
+		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=300&height=300&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
+		width="300" height="300"></iframe>`
+	// 	mhtml += thtml
+	// }
 	mDiv.innerHTML = mhtml;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
