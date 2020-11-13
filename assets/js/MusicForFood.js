@@ -145,7 +145,7 @@ var id="",imgLink
 // This will draw the screen with the 5 recipes with descriptions 
 async function createDetailRecipeButtons(){
 	let resPg = document.querySelector('#culture-cards');
-	var myRecipes = [], myPlaylists = [];
+	var myRecipes = [], myPlaylists = [], newtd1="",newtd2="",newimg="";
 	//going to check if my playlist and recipe list is there waits up to 40 second
 	// do not think we need this anymore because we moved everything to await but will leave in case other issues
 	for ( let i = 0; i < 40; i++){	
@@ -166,7 +166,7 @@ async function createDetailRecipeButtons(){
 		return;
 	} else {
 		let newT = document.createElement("table");
-		newT.setAttribute("class","table is-fullwidth");
+		newT.setAttribute("class","table is-fullwidth is-hoverable");
 		newT.setAttribute("id","selectRecipe");
 		for(let i=0;i < myRecipes.length;i++){
 			//because we store it as an object we need to do a second JSON.parse
@@ -179,25 +179,34 @@ async function createDetailRecipeButtons(){
 			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
 			let winePair =  decodeURI(myRecipes1.winePair);
-
-			newR = document.createElement("tr");
+			////////
+			newR = document.createElement("div");
 			newR.setAttribute("id",recpId);
+			let new1 = document.createElement("tr")
+			newR.appendChild(new1)
 			console.log(recpId);
+			newtd1 = document.createElement("td");
+			newtd1.textContent = title + "\n" + winePair;
+			newtd2 = document.createElement("td");
+			newimg = document.createElement("img")
+			newimg.setAttribute("src",image)
+			newtd2.appendChild(newimg)
 			if(i % 2 === 0){
-			newR.innerHTML=`<td id=${recpId}>${title}<p id=${recpId} >${winePair}</p></td><td id=${recpId}><img src=${image}></td>`
-			newT.appendChild(newR)
+				newR.appendChild(newtd1)
+				newR.appendChild(newtd2)
 			} else {
-			newR.innerHTML=`<td id=${recpId}><img src=${image}></td><td>${title}<p id=${recpId}>${winePair}</p></td>`
-			newT.appendChild(newR)	
-			}
-			
+				newR.appendChild(newtd2)
+				newR.appendChild(newtd1)
+			}	
+			newT.appendChild(newR)
 		}
 		resPg.appendChild(newT);
 		 //add the listener for the recipe (on row for now)
 		 let btnSelect = document.querySelector(`#selectRecipe`);
           btnSelect.addEventListener('click', (event) => {
-		  let recp = event.target.id;
-		  console.log(event);
+		  console.log(event.target.parentElement);
+		  let recp = event.target.parentElement.id;
+		  console.log(event.target, recp);
 	      event.preventDefault();
 		  finalPage(recp);
 		  //cleaning up the page after button is clicked
@@ -217,57 +226,49 @@ function finalPage(recId){
 	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
 	console.log(typeof(myRecipes), myRecipes,recId);
 	console.log(recId);
+	let newC =document.createElement("div");
+	newC.setAttribute("class","columns");
 	let newT = document.createElement("div");
-	// newT.setAttribute("class","container")
-	// let newD = document.createElement("div");
-	// newD.setAttribute("class","container")
-	// newT.setAttribute("class","is-fullwidth");
-	// let rRow = document.createElement("div")
-	// let rCol = document.createElement("div")
-	// rCol.setAttribute("class","column is-two-thirds has-text-left")
+	newT.setAttribute("class","column");
      for (let i = 0;i < myRecipes.length; i++){
 	let myRecipes1 = JSON.parse(myRecipes[i]);
 	// //Process the recipe so we have all the links (we have this but think @Geo going to try iframe)
 	if(myRecipes1.id == recId){
-	// 		rdesc = decodeURI(myRecipes1.description);	
-	// 		rtitle = myRecipes1.title;
-	// 		recpId = myRecipes1.id;
-			 rlink = decodeURI(myRecipes1.recipeUrl);
-			 
-	// 		rimage = myRecipes1.image;
+	   rlink = decodeURI(myRecipes1.recipeUrl);
 	         }
 	}
 	console.log("rlink",rlink)
-	rhtml = `<figure class="image is-16by9">  
-	<iframe class="has-ratio" width="640" height="360" src="${rlink}" 
-	frameborder="0" allowfullscreen></iframe></figure>`;
+	// this adds the iframe to the page for the recipe
+	rhtml = `<figure class="image is-3by5">  
+	<iframe class="has-ratio" style="width:500px;height:750px;" src="${rlink}" 
+	frameborder="0"></iframe></figure>`;
 	newT.innerHTML=rhtml
-	resPg.appendChild(newT);
-
-	// rhtml=`<p class="has-text-weight-semibold">${rtitle}<br></p><p>${rdesc}</p><p><a href="${rlink}">${rtitle}<a></p>`;
-	// //add the html to the col
-	// rCol.innerHTML=rhtml;
-	
-
+	newC.appendChild(newT);
 
     // parse out playlists
 	myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let myMusic1=[];
-	let mCol = document.createElement("div");
-	mCol.setAttribute("class","is-justify-content-center");
+	let mDiv = document.createElement("div");
+	mDiv.setAttribute("class","column is-half");
 	for( let i =0; i < myMusic.length; i++){
 		//has same issue I stored things json format so need to convert back to process individual too
 		 myMusic1 = JSON.parse(myMusic[i]); 
 		let mtitle = myMusic1.title;
 		let mimage = decodeURI(myMusic1.image);
 		let mlink = decodeURI(myMusic1.link);
-		let thtml = `<p><figure class="image is-128x128">
-		<img class="is-rounded" src="${mimage}"></img>
-		<a href="${mlink}"><p>${mtitle}</p></a></figure><br></p>`
+		let newD = document.createElement("div")
+		//let newa
+		let thtml = `<div class="box"><p>
+		<a href="${mlink}">
+		<figure class="image is-128x128">
+		<img src="${mimage}"></img>
+		<br><p>${mtitle}</p></figure></a></p></div>`
 		mhtml += thtml
 	}
-	mCol.innerHTML = mhtml;
-	resPg.appendChild(mCol);
+	mDiv.innerHTML = mhtml;
+	newC.appendChild(mDiv);
+	resPg.appendChild(newC);
+
 }	
 
 
@@ -298,8 +299,8 @@ for( let i = 0; i < keys.length; i++){
   btnSelect.addEventListener('click', (event) => {
 	country = event.target.id;
 	event.preventDefault();
-	fetchRecipes(country);
-	fetchPlaylist(country);
+	//fetchRecipes(country);
+	//fetchPlaylist(country);
 	createDetailRecipeButtons();
 	//cleaning up the page after button is clicked
 	let myObj = document.querySelector('#selectCulture');
