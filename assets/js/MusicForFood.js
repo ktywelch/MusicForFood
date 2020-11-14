@@ -196,9 +196,12 @@ async function createDetailRecipeButtons(){
 			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
 			let winePair =  decodeURI(myRecipes1.winePair);
+			if (winePair == "undefined") {
+				winePair = "We are sorry the full text for your recipe is not available. \
+				The play list feature is still available. We apologize for the inconvience."
+			}
 			newR = document.createElement("tr");
 			newR.setAttribute("id",recpId);
-			//let new1 = document.createElement("tr")
 			newtd1 = document.createElement("td");
 			let newp1 = document.createElement("p");
 			newp1.setAttribute("class","text has-text-weight-bold")
@@ -289,6 +292,9 @@ function finalPage(recId){
 	mDiv.innerHTML =  mhtml + dhtml;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
+	// Place holder to clear the local storage don't need it now everthing is done but while in dev not executing this
+	// 	localStorage.removeItem("recipes");
+	// 	localStorage.removeItem("playlist");
 }	
 
 
@@ -316,9 +322,10 @@ for( let i = 0; i < keys.length; i++){
 	let image = cultures[ck]["images"][imgNo];
 	// and the associated alt text that goes with the image
 	let altimage = cultures[ck]["altImage"][imgNo];
-
-	let newD = document.createElement("row");
-	newD.innerHTML = `<div class=" overlay-image "><a href="../"><img src="../images/${lc}/${image}"  alt="${altimage}" style="padding:10px;width:200px;height:200px;">
+    //this is the HTML to create the buttons one by one ..... and in a div called row
+	let newD = document.createElement("div");
+	newD.setAttribute("class","row")
+	newD.innerHTML = `<div class="overlay-image"><a href="../"><img src="../images/${lc}/${image}"  alt="${altimage}" style="padding:10px;width:200px;height:200px;">
 	<div class=" normal "></div><div class="hover" id=${ck}><img class="image" /><div class="text">${ck}</div></a></div>`
 	newF.appendChild(newD);
  }
@@ -366,6 +373,7 @@ var getClosest = function (elem, selector) {
 	}
 	return null;
 };
+
 
 // this function loads when the html is loaded 
 createButtons(cultures);
