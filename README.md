@@ -22,7 +22,7 @@ THEN I will presented with a list of playlists from Spotify that I can play
 
 <u>Technologies Used:</u>
 - Bulma for CSS
-- .js
+- Javascript
 - Jquery
 - Google Icons and Fonts api
 - Deezer API
