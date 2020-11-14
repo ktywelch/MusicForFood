@@ -9,7 +9,6 @@ section {
 }
 
 
-
 .hero-body {
     background-color: rgb(220, 218, 231);
 }
@@ -35,8 +34,6 @@ body {
 section {
     background-color: cadetblue;
 }
-
-
 
 
 .hero-body {
@@ -74,10 +71,14 @@ row:hover {
     transform:scale(1.3);
     z-index:2;
 }
-
-#music-link{
+*/
+#widget-player{
     display: block;
     align-items: center;
-    align-content: center;
     height: auto;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);  
 }
