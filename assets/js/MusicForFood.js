@@ -53,17 +53,24 @@ const cultures = {
 //var recpAPI = "287cb63de4fa4f29a7e39554c076b89a";
 var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
 
-//Fetch 5 Recipes
+
+// fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
+// it gets deails on the recipes like description, wine pairing and url of the actual recipe that we will use later
+// it also puts all this data in the localStorage for two reasons so during developement we do not exceed our key counts
+// and we also give the user time for these async functions to complete 
+// verify they exist and send the user an error if the data is not in localStorage 
+
+// created this had to be an async function because we had to use await to wait for the response before going to next
 async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
  let num=5,id="",img="",title="",description="",url="",recipes=[],winePair="";
  let dataResponse = [], recp = {},fetches =[];
+ // This get the document element place on the page so we can use it 
  let resPg = document.querySelector('#culture-cards')
  	//clear the recipe storage before we start
 	 if(localStorage.getItem("recipes")){
 		localStorage.removeItem("recipes")
-	}
-	
+	}	
 //------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
 await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=${recpAPIKey}`, {
  })
@@ -288,35 +295,59 @@ function finalPage(recId){
 
 //setup array of cultures
 function createButtons(cultures){
-//add image buttons one for each food type (starting with static will change later)
-let abc = document.querySelector('#culture-cards');
+// gets the element from the web page where we are going to put our new elements
+let cards = document.querySelector('#culture-cards');
+// Get the keys which are the Countries for cuise
 const keys = Object.keys(cultures)
 let culture ="";
+//creates a document form element because we will be choosing a cuisine based country
 let newF = document.createElement("form");
 newF.setAttribute("id","selectCulture")
+//Go through the array 
 for( let i = 0; i < keys.length; i++){
+	// extrates the key because that is the country
 	let ck = keys[i];
+	// makes a lower case because our asset images directory is lower
 	let lc = ck.toLowerCase();
+	// this one gets the number of images per country 
 	let l1 = cultures[ck]["images"].length;
+    // rferences a function we created that returns a random number where the max is the number passed 
 	let imgNo = getRandomInt(l1)
+	// here we grab a random image name from our cultures array 
 	let image = cultures[ck]["images"][imgNo];
+	// and the associated alt text that goes with the image
 	let altimage = cultures[ck]["altImage"][imgNo];
-	let plNo = getRandomInt(cultures[ck]["playlist"].length);
-	let playlist = cultures[ck]["playlist"][plNo];
+
+	//<button class=“btn-squared”><span>Mexico</span></button>
+	// going to remove this code - not used  
+	// let plNo = getRandomInt(cultures[ck]["playlist"].length);
+	// let playlist = cultures[ck]["playlist"][plNo];
 	let newD = document.createElement("row");
-	newD.innerHTML = `<img src="../images/${lc}/${image}" id=${ck} alt="${altimage}" style="padding:10px;width:400px;height:400px;">`;
+	newD.innerHTML = `<div class=" overlay-image "><a href="../"><img src="../images/${lc}/${image}" id=${ck} alt="${altimage}" style="padding:10px;width:200px;height:200px;">
+	<div class=" normal "></div><div class="hover"><img class="image" /><div class="text">${ck}</div></a></div>`
 	newF.appendChild(newD);
- }	
- //add the listeners
- abc.appendChild(newF);
+ }
+ // this adds the cards to our form to display on the screen 	
+ cards.appendChild(newF);
+
+ //section to add the listeners for the first page that will check for a click in form we created called selectCulture
+ // select the element with id  selectCulture (our form) and assign it to btnSelect
  let btnSelect = document.querySelector(`#selectCulture`);
+ // add the listener to that object (which is the section on the form btnSelect is the variable) and passes the event 
+ // to the local event  
   btnSelect.addEventListener('click', (event) => {
+	// we don't want the click to refresh the page so we stop the default click behavior
+	event.preventDefault();  
+	// because we used the lower case keys (country lower case) as the id for each image 
+	// it will assign variable country to the name of the country select	  
 	country = event.target.id;
-	event.preventDefault();
-	//fetchRecipes(country);
-	//fetchPlaylist(country);
+	// this executes async function to fetch recipes passing the country variable 
+	fetchRecipes(country);
+	// this executes async function to fetch music details passing the country variable 
+	fetchPlaylist(country);
+	// this executes function create the details which relies on the fetching functions success 
 	createDetailRecipeButtons();
-	//cleaning up the page after button is clicked
+	//cleaning up the created form so the document page culture-cards section can be used for the rest of the application 
 	let myObj = document.querySelector('#selectCulture');
 	myObj.remove();
 	});   
@@ -328,6 +359,6 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
 
-
+// this function loads when the html is loaded 
 createButtons(cultures);
 
