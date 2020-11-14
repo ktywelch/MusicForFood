@@ -49,10 +49,12 @@ const cultures = {
 	}
 }
 // Old API exceeded daily so need to wait to reuse
+//var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
 //var recpAPIKey = "579753ff1b574d34b8ee1dcf5a821aa9";
 // var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
 //var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
 //var recpAPIKey = "5db5a55184e047fdac2049bb1ebc9ca7";
+// Christian's key
 var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
 
 // fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
@@ -62,6 +64,7 @@ var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
 // verify they exist and send the user an error if the data is not in localStorage 
 
 // created this had to be an async function because we had to use await to wait for the response before going to next
+
 async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
  let num=5,id="",img="",title="",description="",url="",recipes=[],winePair="";
@@ -298,7 +301,7 @@ function createButtons(cultures){
 let cards = document.querySelector('#culture-cards');
 // Get the keys which are the Countries for cuise
 const keys = Object.keys(cultures)
-let culture ="",pl=[];
+let culture ="",pl="";
 //creates a document form element because we will be choosing a cuisine based country
 let newF = document.createElement("form");
 newF.setAttribute("id","selectCulture")
@@ -338,9 +341,9 @@ for( let i = 0; i < keys.length; i++){
 	country = event.target.id;
 	pl = cultures[country].playlist;
 	// this executes async function to fetch recipes passing the country variable 
-	//fetchRecipes(country);
+	fetchRecipes(country);
 	// this executes async function to fetch music details passing the country variable 
-	//fetchPlaylist(pl);
+	fetchPlaylist(pl);
 	// this executes function create the details which relies on the fetching functions success 
 	createDetailRecipeButtons();
 	//cleaning up the created form so the document page culture-cards section can be used for the rest of the application 
