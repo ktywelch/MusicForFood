@@ -16,7 +16,7 @@ const cultures = {
 		"kirti-kalla-JRhvllDBhzs-unsplash.jpg","martin-jernberg-nE2gf1scItI-unsplash.jpg","sonika-agarwal-BTT3faMmBwQ-unsplash.jpg"], 
 		altImage: ["Indian Building taken by Annie Spratt","Festival of Color by Debashis Biswas unsplash",
 		"Taj Mahal by Julian Yuyu-_WuPjE-MPHo-unsplash","Walled City of JaiPur by  Kirti Kalla unsplash",
-		"Victoria Memorial by Martin Jernberg unsplash","Statue of Ganesh Sonika Agarwal unsplash.jpg",],
+		"Victoria Memorial by Martin Jernberg unsplash","Statue of Ganesh Sonika Agarwal unsplash.jpg"],
 		playlist: [808923603,7723841822,5397210322,2484275588,6124514764]
 	},
 	Mexican:  {
@@ -49,10 +49,13 @@ const cultures = {
 	}
 }
 // Old API exceeded daily so need to wait to reuse
-//var recpAPI = "579753ff1b574d34b8ee1dcf5a821aa9";
-//var recpAPI = "287cb63de4fa4f29a7e39554c076b89a";
-var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
-
+//var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
+//var recpAPIKey = "579753ff1b574d34b8ee1dcf5a821aa9";
+// var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
+//var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
+//var recpAPIKey = "5db5a55184e047fdac2049bb1ebc9ca7";
+// Christian's key
+var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
 
 // fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
 // it gets deails on the recipes like description, wine pairing and url of the actual recipe that we will use later
@@ -61,6 +64,7 @@ var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
 // verify they exist and send the user an error if the data is not in localStorage 
 
 // created this had to be an async function because we had to use await to wait for the response before going to next
+
 async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
  let num=5,id="",img="",title="",description="",url="",recipes=[],winePair="";
@@ -89,7 +93,8 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 	  	    .then(function(mresp) {
 	  	      return mresp.json();
    		      })
-   		      .then(response1 => {	
+   		      .then(response1 => {
+			   console.log(response1);	 
 			   description = encodeURI(response1["summary"]);
 			   url = encodeURI(response1["spoonacularSourceUrl"]);
                winePair=encodeURI(response1["winePairing"]["pairingText"]);
@@ -98,7 +103,6 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 			 })
 	}
 	localStorage.setItem("recipes",JSON.stringify(dataResponse));
-
 	 })
 .catch(err => {
 console.error(err);
@@ -107,7 +111,7 @@ console.error(err);
 }
 
 
-async function fetchPlaylist(country){
+async function fetchPlaylist(listOfPl){
 //Use RapidAPI to get playlists from Deezer need to wait for last function to finish 
 // Going to save all the data into LocalStorage so we can use that to generate the page
 var id="",imgLink
@@ -115,7 +119,9 @@ var id="",imgLink
 	localStorage.removeItem("playlist")
   }
   // Pulling the playlists from our difined selction
-  let listOfPl = cultures[country].playlist;
+ // console.log(cultures,"country",country)
+
+  // let listOfPl = cultures[country]["playlist"];
   // creating an empty array so I can put the music Details there
   let dataPlaylist = [];
 
@@ -178,20 +184,16 @@ async function createDetailRecipeButtons(){
 		for(let i=0;i < myRecipes.length;i++){
 			//because we store it as an object we need to do a second JSON.parse
 			let myRecipes1 = JSON.parse(myRecipes[i])
-			// we needed to encode the link and the description or we had a JSON parse error so decoding it
-			// @Geoff - the desc is too big so chaning this to the title - we can use the desc when we click the link
-			let desc = decodeURI(myRecipes1.description);	
+			// we needed to encode the link and the description or we had a JSON parse error so decoding itet desc = decodeURI(myRecipes1.description);	
 			let title = myRecipes1.title;
 			let recpId = myRecipes1.id;
 			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
 			let winePair =  decodeURI(myRecipes1.winePair);
-			////////
 			newR = document.createElement("div");
 			newR.setAttribute("id",recpId);
 			let new1 = document.createElement("tr")
 			newR.appendChild(new1)
-			console.log(recpId);
 			newtd1 = document.createElement("td");
 			newtd1.textContent = title + "\n" + winePair;
 			newtd2 = document.createElement("td");
@@ -231,7 +233,7 @@ function finalPage(recId){
 	let myRecipes = JSON.parse(localStorage.getItem("recipes"));
 	let myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
-	console.log(typeof(myRecipes), myRecipes,recId);
+	//console.log(typeof(myRecipes), myRecipes,recId);
 	console.log(recId);
 	let newC =document.createElement("div");
 	newC.setAttribute("class","columns is-vcentered is-centered  is-multiline" );
@@ -259,10 +261,10 @@ function finalPage(recId){
 	mDiv.setAttribute("class","column is-half");
 
     let i = getRandomInt(myMusic.length)
-	// for( let i =0; i < myMusic.length; i++){
+	//for( let i =0; i < myMusic.length; i++){
 	// 	//has same issue I stored things json format so need to convert back to process individual too
-		 myMusic1 = JSON.parse(myMusic[i]); 
-		 let plid = decodeURI(myMusic1.id);
+		myMusic1 = JSON.parse(myMusic[i]); 
+		let plid = decodeURI(myMusic1.id);
 		let mtitle = myMusic1.title;
 		// let mimage = decodeURI(myMusic1.image);
 		let mlink = decodeURI(myMusic1.link);
@@ -289,7 +291,7 @@ function finalPage(recId){
 	mDiv.innerHTML = mhtml + d;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
-
+	
 }	
 
 
@@ -299,7 +301,7 @@ function createButtons(cultures){
 let cards = document.querySelector('#culture-cards');
 // Get the keys which are the Countries for cuise
 const keys = Object.keys(cultures)
-let culture ="";
+let culture ="",pl="";
 //creates a document form element because we will be choosing a cuisine based country
 let newF = document.createElement("form");
 newF.setAttribute("id","selectCulture")
@@ -318,13 +320,9 @@ for( let i = 0; i < keys.length; i++){
 	// and the associated alt text that goes with the image
 	let altimage = cultures[ck]["altImage"][imgNo];
 
-	//<button class=“btn-squared”><span>Mexico</span></button>
-	// going to remove this code - not used  
-	// let plNo = getRandomInt(cultures[ck]["playlist"].length);
-	// let playlist = cultures[ck]["playlist"][plNo];
 	let newD = document.createElement("row");
-	newD.innerHTML = `<div class=" overlay-image "><a href="../"><img src="../images/${lc}/${image}" id=${ck} alt="${altimage}" style="padding:10px;width:200px;height:200px;">
-	<div class=" normal "></div><div class="hover"><img class="image" /><div class="text">${ck}</div></a></div>`
+	newD.innerHTML = `<div class=" overlay-image "><a href="../"><img src="../images/${lc}/${image}"  alt="${altimage}" style="padding:10px;width:200px;height:200px;">
+	<div class=" normal "></div><div class="hover" id=${ck}><img class="image" /><div class="text">${ck}</div></a></div>`
 	newF.appendChild(newD);
  }
  // this adds the cards to our form to display on the screen 	
@@ -337,14 +335,15 @@ for( let i = 0; i < keys.length; i++){
  // to the local event  
   btnSelect.addEventListener('click', (event) => {
 	// we don't want the click to refresh the page so we stop the default click behavior
-	event.preventDefault();  
-	// because we used the lower case keys (country lower case) as the id for each image 
+	event.preventDefault();   
+    // because we used the lower case keys (country lower case) as the id for each image 
 	// it will assign variable country to the name of the country select	  
 	country = event.target.id;
+	pl = cultures[country].playlist;
 	// this executes async function to fetch recipes passing the country variable 
 	fetchRecipes(country);
 	// this executes async function to fetch music details passing the country variable 
-	fetchPlaylist(country);
+	fetchPlaylist(pl);
 	// this executes function create the details which relies on the fetching functions success 
 	createDetailRecipeButtons();
 	//cleaning up the created form so the document page culture-cards section can be used for the rest of the application 
