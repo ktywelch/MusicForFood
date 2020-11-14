@@ -61,24 +61,14 @@ form {
     transition:1s;
 }
 
-row img {
+.row img {
     display:block;
     width: 100%;
     border-radius: 5px;
 } 
 
-row:hover {
+.row:hover {
     transform:scale(1.3);
     z-index:2;
 }
-*/
-#widget-player{
-    display: block;
-    align-items: center;
-    height: auto;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);  
-}
+
