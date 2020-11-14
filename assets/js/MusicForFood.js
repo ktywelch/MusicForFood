@@ -196,12 +196,17 @@ async function createDetailRecipeButtons(){
 			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
 			let winePair =  decodeURI(myRecipes1.winePair);
-			newR = document.createElement("div");
+			newR = document.createElement("tr");
 			newR.setAttribute("id",recpId);
-			let new1 = document.createElement("tr")
-			newR.appendChild(new1)
+			//let new1 = document.createElement("tr")
 			newtd1 = document.createElement("td");
-			newtd1.textContent = title + "\n" + winePair;
+			let newp1 = document.createElement("p");
+			newp1.setAttribute("class","text has-text-weight-bold")
+            newp1.textContent = title
+			let newp2 = document.createElement("p");
+			newp2.textContent =  winePair;
+			newtd1.appendChild(newp1);
+			newtd1.appendChild(newp2);
 			newtd2 = document.createElement("td");
 			newimg = document.createElement("img")
 			newimg.setAttribute("src",image)
@@ -212,7 +217,8 @@ async function createDetailRecipeButtons(){
 			} else {
 				newR.appendChild(newtd2)
 				newR.appendChild(newtd1)
-			}	
+			}
+			//newR.appendChild(new1)	
 			newT.appendChild(newR)
 		}
 		resPg.appendChild(newT);
@@ -220,10 +226,12 @@ async function createDetailRecipeButtons(){
 		 let btnSelect = document.querySelector(`#selectRecipe`);
           btnSelect.addEventListener('click', (event) => {
 		  //stop the default click behavior
-	       event.preventDefault();   	  
+		   event.preventDefault();  
+		  var parent = getClosest(event.target, 'tr');
+		  console.log(parent) 	  
 	      //had to use the parent div because the if you click on the paragraph in the row that was the object id 
-		  let recp = event.target.parentElement.id;
-		  console.log(event.target, recp);
+		  let recp = parent.id;
+		  console.log(event, recp);
 	      event.preventDefault();
 		  finalPage(recp);
 		  //cleaning up the page after button is clicked
@@ -351,6 +359,13 @@ for( let i = 0; i < keys.length; i++){
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
+// borrowed this code from gomakethings because Ineeded to go back to find the closets tr to click 
+var getClosest = function (elem, selector) {
+	for ( ; elem && elem !== document; elem = elem.parentNode ) {
+		if ( elem.matches( selector ) ) return elem;
+	}
+	return null;
+};
 
 // this function loads when the html is loaded 
 createButtons(cultures);
