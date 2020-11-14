@@ -12,9 +12,7 @@ WHEN I Select the recipe I will get a lis of ingredients
 THEN I will presented with a list of playlists from Spotify that I can play 
 ----
 
-![FlowChart](./assets/images/flowdiagram.png)
-
-# MusicForFood - [Link](https://-project-1)
+# MusicForFood - [Link](https://ktywelch.github.io/MusicForFood/assets/html/first-page.html)
 
 <u>Contributors: Javascript-Jockies</u>
 - Kathleen Welch
