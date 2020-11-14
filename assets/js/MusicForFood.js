@@ -227,7 +227,7 @@ function finalPage(recId){
 	console.log(typeof(myRecipes), myRecipes,recId);
 	console.log(recId);
 	let newC =document.createElement("div");
-	newC.setAttribute("class","columns");
+	newC.setAttribute("class","columns is-vcentered is-centered  is-multiline" );
 	let newT = document.createElement("div");
 	newT.setAttribute("class","column");
      for (let i = 0;i < myRecipes.length; i++){
@@ -276,7 +276,7 @@ function finalPage(recId){
 		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=300&height=300&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
 		width="300" height="300"></iframe>`
 		
-		let d = `<button class="button is-link is-light is-medium" id="music-link" onclick="window.open(location.href='${mlink}','_blank')">
+		let d = `<button class="button is-link is-light is-medium is-3by5" id="music-link" onclick="window.open(location.href='${mlink}','_blank')">
                  click here to listen to complete<br> ${mtitle} playlist</button>`
 	
 	mDiv.innerHTML = mhtml + d;
@@ -313,8 +313,8 @@ for( let i = 0; i < keys.length; i++){
   btnSelect.addEventListener('click', (event) => {
 	country = event.target.id;
 	event.preventDefault();
-	fetchRecipes(country);
-	fetchPlaylist(country);
+	//fetchRecipes(country);
+	//fetchPlaylist(country);
 	createDetailRecipeButtons();
 	//cleaning up the page after button is clicked
 	let myObj = document.querySelector('#selectCulture');
