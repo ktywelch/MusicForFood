@@ -256,9 +256,9 @@ function finalPage(recId){
 	// 	//has same issue I stored things json format so need to convert back to process individual too
 		 myMusic1 = JSON.parse(myMusic[i]); 
 		 let plid = decodeURI(myMusic1.id);
-		// let mtitle = myMusic1.title;
+		let mtitle = myMusic1.title;
 		// let mimage = decodeURI(myMusic1.image);
-		//let mlink = decodeURI(myMusic1.link);
+		let mlink = decodeURI(myMusic1.link);
 		let newD = document.createElement("div")
 		//let newa
 	   //<img src="${mimage}"></img>
@@ -271,12 +271,15 @@ function finalPage(recId){
 		
 		// <br><p>${mtitle}</p></figure></a></p></iframe>`
 
-		mhtml = `<iframe scrolling="no" frameborder="0" allowTransparency="true" 
+
+		mhtml = `<iframe scrolling="no" frameborder="0" allowTransparency="true" title=${mtitle}
 		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=300&height=300&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
 		width="300" height="300"></iframe>`
-	// 	mhtml += thtml
-	// }
-	mDiv.innerHTML = mhtml;
+		
+		let d = `<button class="button is-link is-light is-medium" id="music-link" onclick="window.open(location.href='${mlink}','_blank')">
+                 click here to listen to complete<br> ${mtitle} playlist</button>`
+	
+	mDiv.innerHTML = mhtml + d;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
 
@@ -310,8 +313,8 @@ for( let i = 0; i < keys.length; i++){
   btnSelect.addEventListener('click', (event) => {
 	country = event.target.id;
 	event.preventDefault();
-	//fetchRecipes(country);
-	//fetchPlaylist(country);
+	fetchRecipes(country);
+	fetchPlaylist(country);
 	createDetailRecipeButtons();
 	//cleaning up the page after button is clicked
 	let myObj = document.querySelector('#selectCulture');
