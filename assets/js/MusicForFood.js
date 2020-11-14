@@ -51,11 +51,11 @@ const cultures = {
 // Old API exceeded daily so need to wait to reuse
 //var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
 //var recpAPIKey = "579753ff1b574d34b8ee1dcf5a821aa9";
-// var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
+var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
 //var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
 //var recpAPIKey = "5db5a55184e047fdac2049bb1ebc9ca7";
 // Christian's key
-var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
+//var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
 
 // fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
 // it gets deails on the recipes like description, wine pairing and url of the actual recipe that we will use later
@@ -67,7 +67,7 @@ var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
 
 async function fetchRecipes (cuisine){
  //setting up variables that we may need within and between the function
- let num=5,id="",img="",title="",description="",url="",recipes=[],winePair="";
+ let num="50";id="",img="",title="",description="",url="",recipes=[],winePair="";
  let dataResponse = [], recp = {},fetches =[];
  // This get the document element place on the page so we can use it 
  let resPg = document.querySelector('#culture-cards')
@@ -75,7 +75,7 @@ async function fetchRecipes (cuisine){
 	 if(localStorage.getItem("recipes")){
 		localStorage.removeItem("recipes")
 	}	
-//------------------fetch 5 recipes from the country of coice (cuisine variable)----------------------------//	
+//------------------fetch 5 random recipes from the country of coice (cuisine variable)----------------------------//	
 await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=${recpAPIKey}`, {
  })
    .then(function(resp) {
@@ -83,11 +83,21 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 })
 .then( async response => {
 	// let newR = document.createElement("row");
+	let randomRec=[];
 	recipes = response["results"];
-	for (let i=0;i < recipes.length; i++) {
-	id = recipes[i]["id"];
-	img = recipes[i]["image"];
-	title = recipes[i]["title"];
+	//get a random number
+	for (let j=0;j <5;j++) {
+	let w = getRandomInt(recipes.length);
+    if (randomRec.includes(w)){j--}else{randomRec.push(w)}
+	}
+	console.log(randomRec)
+
+
+	for (let i=0;i < randomRec.length ; i++) {
+	let recNo = randomRec[i]	
+	id = recipes[recNo]["id"];
+	img = recipes[recNo]["image"];
+	title = recipes[recNo]["title"];
     await fetch(`https://api.spoonacular.com/recipes/${id}/information?includeNutrition=false&apiKey=${recpAPIKey}`, {
 	        	})
 	  	    .then(function(mresp) {
@@ -103,7 +113,7 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 			 })
 	}
 	localStorage.setItem("recipes",JSON.stringify(dataResponse));
-	 })
+	  })
 .catch(err => {
 console.error(err);
  });
@@ -118,10 +128,6 @@ var id="",imgLink
   if(localStorage.getItem("playlist")){
 	localStorage.removeItem("playlist")
   }
-  // Pulling the playlists from our difined selction
- // console.log(cultures,"country",country)
-
-  // let listOfPl = cultures[country]["playlist"];
   // creating an empty array so I can put the music Details there
   let dataPlaylist = [];
 
@@ -162,22 +168,22 @@ async function createDetailRecipeButtons(){
 	//going to check if my playlist and recipe list is there waits up to 40 second
 	// do not think we need this anymore because we moved everything to await but will leave in case other issues
 	for ( let i = 0; i < 40; i++){	
-		if(localStorage.getItem("recipes")){
+		if(localStorage.getItem("recipes") && localStorage.getItem("playlist")){
 			myRecipes = JSON.parse(localStorage.getItem("recipes"));
-			//myPlaylists = JSON.parse(localStorage.getItem("playlist"));
+			myPlaylists = JSON.parse(localStorage.getItem("playlist"));
 			i = 41;
 		} else {
 			await new Promise(resolve => setTimeout(resolve, 1000));
 		}
 	}
 
-    if( myRecipes.length === 0 ){
+      if( myRecipes.length === 0 ){
 		//create an error on the screen and the user know there is a problem with the fetch 
 		newP = document.createElement("p");
 		newP.innerHTML="<p>The Fetch Failed Please Check Your Network</p>";
 		resPg.appendChild(newP);
 		return;
-	} else {
+	  } else {
 		let newT = document.createElement("table");
 		newT.setAttribute("class","table is-fullwidth is-hoverable");
 		newT.setAttribute("id","selectRecipe");
@@ -190,12 +196,20 @@ async function createDetailRecipeButtons(){
 			let link = decodeURI(myRecipes1.recipeUrl);
 			let image = myRecipes1.image;
 			let winePair =  decodeURI(myRecipes1.winePair);
-			newR = document.createElement("div");
+			if (winePair == "undefined") {
+				winePair = "We are sorry the full text for your recipe is not available. \
+				The play list feature is still available. We apologize for the inconvience."
+			}
+			newR = document.createElement("tr");
 			newR.setAttribute("id",recpId);
-			let new1 = document.createElement("tr")
-			newR.appendChild(new1)
 			newtd1 = document.createElement("td");
-			newtd1.textContent = title + "\n" + winePair;
+			let newp1 = document.createElement("p");
+			newp1.setAttribute("class","text has-text-weight-bold")
+            newp1.textContent = title
+			let newp2 = document.createElement("p");
+			newp2.textContent =  winePair;
+			newtd1.appendChild(newp1);
+			newtd1.appendChild(newp2);
 			newtd2 = document.createElement("td");
 			newimg = document.createElement("img")
 			newimg.setAttribute("src",image)
@@ -206,25 +220,30 @@ async function createDetailRecipeButtons(){
 			} else {
 				newR.appendChild(newtd2)
 				newR.appendChild(newtd1)
-			}	
+			}
+			//newR.appendChild(new1)	
 			newT.appendChild(newR)
 		}
 		resPg.appendChild(newT);
 		 //add the listener for the recipe (on row for now)
 		 let btnSelect = document.querySelector(`#selectRecipe`);
           btnSelect.addEventListener('click', (event) => {
-		  console.log(event.target.parentElement);
-		  let recp = event.target.parentElement.id;
-		  console.log(event.target, recp);
+		  //stop the default click behavior
+		   event.preventDefault();  
+		  var parent = getClosest(event.target, 'tr');
+		  console.log(parent) 	  
+	      //had to use the parent div because the if you click on the paragraph in the row that was the object id 
+		  let recp = parent.id;
+		  console.log(event, recp);
 	      event.preventDefault();
 		  finalPage(recp);
 		  //cleaning up the page after button is clicked
 	      let myObj = document.querySelector('#selectRecipe');
 	      myObj.remove();
-	});  
-	}
+	      });  
+	  }
 
-	}
+}
 
 function finalPage(recId){
 	// get the place where we are going to put the page
@@ -233,10 +252,8 @@ function finalPage(recId){
 	let myRecipes = JSON.parse(localStorage.getItem("recipes"));
 	let myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let rdesc="",rtitle="",recpId="",rlink="",rimage="",mhtml="",rhtml="";
-	//console.log(typeof(myRecipes), myRecipes,recId);
-	console.log(recId);
 	let newC =document.createElement("div");
-	newC.setAttribute("class","columns is-vcentered is-centered  is-multiline" );
+	newC.setAttribute("class","columns" );
 	let newT = document.createElement("div");
 	newT.setAttribute("class","column");
      for (let i = 0;i < myRecipes.length; i++){
@@ -258,40 +275,26 @@ function finalPage(recId){
 	myMusic = JSON.parse(localStorage.getItem("playlist"));
 	let myMusic1=[];
 	let mDiv = document.createElement("div");
-	mDiv.setAttribute("class","column is-half");
+	mDiv.setAttribute("class","column");
 
     let i = getRandomInt(myMusic.length)
-	//for( let i =0; i < myMusic.length; i++){
-	// 	//has same issue I stored things json format so need to convert back to process individual too
 		myMusic1 = JSON.parse(myMusic[i]); 
 		let plid = decodeURI(myMusic1.id);
 		let mtitle = myMusic1.title;
-		// let mimage = decodeURI(myMusic1.image);
 		let mlink = decodeURI(myMusic1.link);
-		let newD = document.createElement("div")
-		//let newa
-	   //<img src="${mimage}"></img>
-	   // <br><p>${mtitle}</p></figure></a></p></iframe>`
-		
-	
-		// let thtml = `<figure class="image is-128x128">
-		// <iframe style="width:100px;height:150px;padding:10px;"
-		// src ="${mlink}">
-		
-		// <br><p>${mtitle}</p></figure></a></p></iframe>`
-
-
 		mhtml = `<iframe scrolling="no" frameborder="0" allowTransparency="true" title=${mtitle}
-		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=300&height=300&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
-		width="300" height="300"></iframe>`
+		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=500&height=500&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
+		width="500" height="500"></iframe>`
 		
-		let d = `<button class="button is-link is-light is-medium is-3by5" id="music-link" onclick="window.open(location.href='${mlink}','_blank')">
-                 click here to listen to complete<br> ${mtitle} playlist</button>`
+		let dhtml = `<div cless="m-4"><button class="button is-large" id="music-link" onclick="window.open(location.href='${mlink}','_blank')">
+                 <p class="content is-medium">Click here to listen to complete <br> ${mtitle} playlist</p></button></div>`
 	
-	mDiv.innerHTML = mhtml + d;
+	mDiv.innerHTML =  mhtml + dhtml;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
-	
+	// Place holder to clear the local storage don't need it now everthing is done but while in dev not executing this
+	// 	localStorage.removeItem("recipes");
+	// 	localStorage.removeItem("playlist");
 }	
 
 
@@ -319,9 +322,10 @@ for( let i = 0; i < keys.length; i++){
 	let image = cultures[ck]["images"][imgNo];
 	// and the associated alt text that goes with the image
 	let altimage = cultures[ck]["altImage"][imgNo];
-
-	let newD = document.createElement("row");
-	newD.innerHTML = `<div class=" overlay-image "><a href="../"><img src="../images/${lc}/${image}"  alt="${altimage}" style="padding:10px;width:200px;height:200px;">
+    //this is the HTML to create the buttons one by one ..... and in a div called row
+	let newD = document.createElement("div");
+	newD.setAttribute("class","row")
+	newD.innerHTML = `<div class="overlay-image"><a href="../"><img src="../images/${lc}/${image}"  alt="${altimage}" style="padding:10px;width:200px;height:200px;">
 	<div class=" normal "></div><div class="hover" id=${ck}><img class="image" /><div class="text">${ck}</div></a></div>`
 	newF.appendChild(newD);
  }
@@ -335,10 +339,14 @@ for( let i = 0; i < keys.length; i++){
  // to the local event  
   btnSelect.addEventListener('click', (event) => {
 	// we don't want the click to refresh the page so we stop the default click behavior
-	event.preventDefault();   
+	event.preventDefault(); 
+	console.log(event);  
     // because we used the lower case keys (country lower case) as the id for each image 
-	// it will assign variable country to the name of the country select	  
+	// make sure we are clicking in a one of the hover buttons otherwise we wait!
+	if(event.target.className == "hover"){	  
+	// it will assign variable country to the name 	
 	country = event.target.id;
+	console.log(event);
 	pl = cultures[country].playlist;
 	// this executes async function to fetch recipes passing the country variable 
 	fetchRecipes(country);
@@ -349,6 +357,7 @@ for( let i = 0; i < keys.length; i++){
 	//cleaning up the created form so the document page culture-cards section can be used for the rest of the application 
 	let myObj = document.querySelector('#selectCulture');
 	myObj.remove();
+	}
 	});   
  
 }
@@ -357,6 +366,14 @@ for( let i = 0; i < keys.length; i++){
 function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
+// borrowed this code from gomakethings because Ineeded to go back to find the closets tr to click 
+var getClosest = function (elem, selector) {
+	for ( ; elem && elem !== document; elem = elem.parentNode ) {
+		if ( elem.matches( selector ) ) return elem;
+	}
+	return null;
+};
+
 
 // this function loads when the html is loaded 
 createButtons(cultures);
