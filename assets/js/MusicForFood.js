@@ -50,11 +50,12 @@ const cultures = {
 }
 // Old API exceeded daily so need to wait to reuse
 //var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
-//var recpAPIKey = "579753ff1b574d34b8ee1dcf5a821aa9";
-var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
+// K's key 
+var recpAPIKey = "579753ff1b574d34b8ee1dcf5a821aa9";
+//var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
 //var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
 //var recpAPIKey = "5db5a55184e047fdac2049bb1ebc9ca7";
-// Christian's key
+// C's key
 //var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
 
 // fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
@@ -82,16 +83,17 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
    return resp.json();
 })
 .then( async response => {
-	// let newR = document.createElement("row");
-	let randomRec=[];
+	// the way the json return the results is an array so pulling that out into an array we can use
 	recipes = response["results"];
-	//get a random number
+	// set up an array to store array positions of 5 unique recipes
+	let randomRec=[];
+	// We are getting up to 100 recipes on a culture this one will help is pick up 5 unique random recipes
 	for (let j=0;j <5;j++) {
+	//get a random array number	
 	let w = getRandomInt(recipes.length);
+	// this if statement check do we that array position already in our array then decrement counter so it will go again 
     if (randomRec.includes(w)){j--}else{randomRec.push(w)}
 	}
-	console.log(randomRec)
-
 
 	for (let i=0;i < randomRec.length ; i++) {
 	let recNo = randomRec[i]	
@@ -103,8 +105,7 @@ await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine
 	  	    .then(function(mresp) {
 	  	      return mresp.json();
    		      })
-   		      .then(response1 => {
-			   console.log(response1);	 
+   		      .then(response1 => {	 
 			   description = encodeURI(response1["summary"]);
 			   url = encodeURI(response1["spoonacularSourceUrl"]);
                winePair=encodeURI(response1["winePairing"]["pairingText"]);
@@ -231,10 +232,10 @@ async function createDetailRecipeButtons(){
 		  //stop the default click behavior
 		   event.preventDefault();  
 		  var parent = getClosest(event.target, 'tr');
-		  console.log(parent) 	  
+		 	  
 	      //had to use the parent div because the if you click on the paragraph in the row that was the object id 
 		  let recp = parent.id;
-		  console.log(event, recp);
+		
 	      event.preventDefault();
 		  finalPage(recp);
 		  //cleaning up the page after button is clicked
@@ -263,7 +264,6 @@ function finalPage(recId){
 	   rlink = decodeURI(myRecipes1.recipeUrl);
 	         }
 	}
-	console.log("rlink",rlink)
 	// this adds the iframe to the page for the recipe
 	rhtml = `<figure class="image is-3by5">  
 	<iframe class="has-ratio" style="width:500px;height:750px;" src="${rlink}" 
@@ -339,14 +339,12 @@ for( let i = 0; i < keys.length; i++){
  // to the local event  
   btnSelect.addEventListener('click', (event) => {
 	// we don't want the click to refresh the page so we stop the default click behavior
-	event.preventDefault(); 
-	console.log(event);  
+	event.preventDefault();  
     // because we used the lower case keys (country lower case) as the id for each image 
 	// make sure we are clicking in a one of the hover buttons otherwise we wait!
 	if(event.target.className == "hover"){	  
 	// it will assign variable country to the name 	
 	country = event.target.id;
-	console.log(event);
 	pl = cultures[country].playlist;
 	// this executes async function to fetch recipes passing the country variable 
 	fetchRecipes(country);
