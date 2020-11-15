@@ -18,7 +18,7 @@ The coronavirus outbreak has rattled our daily lives, and things seem to change 
 In this app we’re exploring how we cook and you can listen to music to match your cuisne!
 
 ----
-# Application Objective
+## Application Objective
 
 The goal of the project was to create a website that searches for recipes and music depending on what cuisine of your choice so that the user is provide a playlist from that same ethnic culture. Thus giving the User a full immersed experience and feeling of that culture.
 
