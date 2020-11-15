@@ -33,7 +33,7 @@ The user will have the ability to:
 * The user can contact us through a contact application 
 * Information about our apps can be found in a common about method.
 
-This GIF shows the user interface
+This GIF shows the user interface and how the application utilizeslocal storage.
 
 ![ScreenView](./assets/images/MusicForFood.gif)
 ----
