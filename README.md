@@ -1,26 +1,51 @@
-# MusicForFood
+![MusicForFood](./assets/images/ICONS/MainPage.jpg)
 
-## User Story
 
-As a user I want to be able be to have to choose music from from the same culture to pair with my food so I feel immersed in the experience.
 
-Acceptance Criteria:
-GIVEN a menu of cultures ,
-WHEN I select the culture 
-THEN I am presented with cuisine choices  
-WHEN I Select the recipe I will get a lis of ingredients
-THEN I will presented with a list of playlists from Spotify that I can play 
+## Table of contents
+* [Use Case](#use-case)
+* [Application Objective](#application-objective)
+* [Functionality](#functionality)
+* [Setup](#setup)
+* [Technologies Used](#technologies-used)
+* [Developers: Javascript-Jockies](#Developers:-Javascript-Jockies)
+
+
+## Use Case
+
+The coronavirus outbreak has rattled our daily lives, and things seem to change minute by minute. But there’s one constant; we have to eat. If your bored by your ususal dishes?  Give the app a chance to try out new recipes and music! 
+
+In this app we’re exploring how we cook and you can listen to music to match your cuisne!
+
 ----
+# Application Objective
+
+The goal of the project was to create a website that searches for recipes and music depending on what cuisine of your choice so that the user is provide a playlist from that same ethnic culture. Thus giving the User a full immersed experience and feeling of that culture.
+
+[MusicForFood Application Link](https://ktywelch.github.io/MusicForFood/assets/html/first-page.html)
+
+## Functionality
+The user will have the ability to:
+
+* Select a culture we would like to get a recipe from
+* After selecting the culture I will be presented with a choice of recipes for this culture.
+* Once I select the recipe I will see the recipe and a playlist that is associated with the culter
+* The user can contact us through a contact application 
+* Information about our apps can be found in a common about method.
+
+This GIF shows the user interface
+
+![ScreenView](./assets/images/MusicForFood.gif)
+----
+## Setup 
+
+This application uses the Deezer API through [Rapid API](https://rapidapi.com/) and a direct api from [Spoonacular](https://spoonacular.com/food-api) and the keys should be obtained by the installer so they are using unique keys. The keys for the application can be found in the MusicForFood.js file preceeded by a commend "API Variables section". Otherwise the application is self contained using internal variables, local storage and the afore mentioned APIs. 
+
 
 # MusicForFood - [Link](https://ktywelch.github.io/MusicForFood/assets/html/first-page.html)
 
-<u>Contributors: Javascript-Jockies</u>
-- Kathleen Welch
-- Christian Suchoski
-- Geoffrey Jiang
-- Clinton Chunga
 
-<u>Technologies Used:</u>
+## Technologies Used
 - Bulma for CSS
 - Javascript
 - Jquery
@@ -32,11 +57,11 @@ THEN I will presented with a list of playlists from Spotify that I can play
 - Jam Board
 - Postman
 
-<u>Project Summary:</u>
 
-The goal of the project was to create a website that will search for recipes and music depending on what cuisine of your choice. Forexample, if i choose an indian cuisine, recipe top recipes would populate as well as provide a playlist from that ethnic culture. Thus giving the User a full immersed experience and feeling of that culture.
+## Developers: Javascript-Jockies
+- Kathleen Welch
+- Christian Suchoski
+- Geoffrey Jiang
+- Clinton Chunga
 
-The Deezer API is the API that was used to determine the music and playlist set on the user provided end date.  
-
-Once the submit button is selected, an additional API call is then made to Spoonacular to retrieve recipes for that cuisine and then ultimately giving us a recipe as well a playlist of music to go with our food.
 
