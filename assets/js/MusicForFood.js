@@ -52,7 +52,31 @@ const cultures = {
 }
 // API Variables section 
 var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
-var rapidApiKey = "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b";
+
+
+/*
+fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=eminem", {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-key": "bed16f1cc4msha68824ad4c37dffp1f1423jsn9c23aa4bd58a",
+		"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+	}
+})
+.then(response => {
+	console.log(response);
+})
+.catch(err => {
+	console.error(err);
+});
+*/
+
+
+
+
+
+
+
+
 
 
 // fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
@@ -136,7 +160,7 @@ var id="",imgLink
     await fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
 		"method": "GET",
 		"headers": {
-			"x-rapidapi-key":  + rapidApiKey ,
+			"x-rapidapi-key": "bed16f1cc4msha68824ad4c37dffp1f1423jsn9c23aa4bd58a",
 			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
 		}
 	})
@@ -265,6 +289,7 @@ function finalPage(recId){
 	rhtml = `<figure class="image is-3by5">  
 	<iframe class="has-ratio" style="width:500px;height:750px;" src="${rlink}" 
 	frameborder="0"></iframe></figure>`;
+	// could have used same document methods but this was 
 	newT.innerHTML=rhtml
 	newC.appendChild(newT);
 
@@ -279,6 +304,7 @@ function finalPage(recId){
 		let plid = decodeURI(myMusic1.id);
 		let mtitle = myMusic1.title;
 		let mlink = decodeURI(myMusic1.link);
+		// used html and innerHTML could have used same document methods but this was faster...
 		mhtml = `<iframe scrolling="no" frameborder="0" allowTransparency="true" title=${mtitle}
 		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=500&height=500&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
 		width="500" height="500"></iframe>`
@@ -289,9 +315,9 @@ function finalPage(recId){
 	mDiv.innerHTML =  mhtml + dhtml;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
-	// Place holder to clear the local storage don't need it now everthing is done but while in dev not executing this
-	// 	localStorage.removeItem("recipes");
-	// 	localStorage.removeItem("playlist");
+	// Clear the local storage at the last screen 
+		localStorage.removeItem("recipes");
+		localStorage.removeItem("playlist");
 }	
 
 
@@ -362,7 +388,7 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
 // borrowed this code from gomakethings because Ineeded to go back to find the closets tr to click 
-var getClosest = function (elem, selector) {
+function getClosest(elem, selector) {
 	for ( ; elem && elem !== document; elem = elem.parentNode ) {
 		if ( elem.matches( selector ) ) return elem;
 	}
